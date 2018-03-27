@@ -9,7 +9,11 @@ public class MainController {
 	@FXML 
 	AnchorPane window;
 	
-	private static UserBean user; 
+	private static UserBean user;
+	
+	public static void setUser(UserBean user) {
+		MainController.user = user;
+	}
 	
 	@FXML
 	public void initialize() {
