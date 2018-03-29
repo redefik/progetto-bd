@@ -6,7 +6,7 @@ public class UserBean {
 	private String password;
 	private String nome; 
 	private String cognome;
-	private char type; 
+	private int type; 
 	private String mail;
 	
 	public UserBean() {}
@@ -44,10 +44,10 @@ public class UserBean {
 	public void setCognome(String cognome) {
 		this.cognome = cognome;
 	}
-	public char getType() {
+	public int getType() {
 		return type;
 	}
-	public void setType(char type) {
+	public void setType(int type) {
 		this.type = type;
 	}
 	public String getMail() {
@@ -56,6 +56,5 @@ public class UserBean {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
-	
 	
 }

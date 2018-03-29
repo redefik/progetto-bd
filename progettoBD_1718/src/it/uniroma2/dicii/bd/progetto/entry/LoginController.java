@@ -1,30 +1,70 @@
 package it.uniroma2.dicii.bd.progetto.entry;
-import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
+import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
+import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
+import it.uniroma2.dicii.bd.progetto.errorLogic.ErrorType;
+import it.uniroma2.dicii.bd.progetto.errorLogic.GUIError;
 import it.uniroma2.dicii.bd.progetto.gui.WindowManager;
+import it.uniroma2.dicii.bd.progetto.user.UserBean;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 
 public class LoginController {
 
 	@FXML 
-	AnchorPane window;
+	private AnchorPane window;
 	@FXML 
-	TextField username;
+	private TextField username;
 	@FXML 
-	PasswordField password;
+	private PasswordField password;
+	@FXML
+	private Label errorMessage;
 	
-	public void login() throws IOException {
+	public void login() throws ConfigurationError, DataAccessError, GUIError {
 		
-		String user = username.getText();
-		String pass = password.getText();
+		try {
 		
-		LoginSession ls = LoginSession.getInstance();
-		//UserBean userBean = ls.
+			String user = username.getText();
+			String pass = password.getText();
+			
+			// Ricerca l'utente con l'username e la password dati
+			LoginSession loginSession = LoginSession.getInstance();
+			UserBean userBean = loginSession.findUser(user, pass);
+			
+			if (userBean == null) {
+				// Se l'utente non viene trovato, compare un messaggio di errore
+				errorMessage.setVisible(true);
+			} else {
+				// Se l'utente viene trovato, apro la finestra successiva passandole il bean corrispondente
+				MainController.setUser(userBean);
+			
+				WindowManager.getInstance().changeMenu("../gui/mainView.fxml");
+			}
+		} catch(ConfigurationError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
+		} catch(DataAccessError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
+		} catch(GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
 		
-		WindowManager.getInstance().changeMenu(window, "../gui/mainView.fxml");
-		
+	}
+	
+	// Elimina il messaggio di errore non appena l'utente riprova a inserire username o password
+	public void clearLabel() {
+		errorMessage.setVisible(false);
+	}
+	
+	@FXML
+	public void initialize() {
+		WindowManager.getInstance().setWindow(window);
 	}
 }
