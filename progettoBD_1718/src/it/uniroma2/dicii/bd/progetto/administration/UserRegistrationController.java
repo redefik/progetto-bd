@@ -11,7 +11,7 @@ public class UserRegistrationController {
 	
 	private static final String NOT_VALID_USERNAME = "L'username deve avere al minimo 6 caratteri.";
 	private static final String NOT_VALID_PASSWORD = "La password deve avere al minimo 6 caratteri.";
-	private static final String NOT_AVAILABLE_USERNAME = "L'username scelto e' gia' in uso.";
+	private static final String NOT_AVAILABLE_USERNAME = "Username gia' in uso.";
 	private static final String NOT_CONFIRMED_PASSWORD = "Le password inserite non coincidono.";
 	
 	@FXML
