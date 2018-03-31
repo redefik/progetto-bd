@@ -15,6 +15,10 @@ public class WindowManager {
 	
 	private AnchorPane window;
 	
+	private static final String DATA_ACCESS_ERROR_MSG = "Accesso ai dati non riuscito";
+	private static final String CONFIGURATION_ERROR_MSG = "Configurazione di sistema errata";
+	private static final String GUI_ERROR_MSG = "Errore nella gestione delle finestre";
+	
     public void setWindow(AnchorPane window) {
 		this.window = window;
 	}
@@ -47,13 +51,13 @@ public class WindowManager {
         alert.setTitle("Errore");
         switch (error) {
             case DATA_ACCESS:
-                alert.setHeaderText("Accesso ai dati non riuscito");
+                alert.setHeaderText(DATA_ACCESS_ERROR_MSG);
                 break;
             case CONFIGURATION:
-                alert.setHeaderText("Configurazione di sistema errata");
+                alert.setHeaderText(CONFIGURATION_ERROR_MSG);
                 break;
             case GUI:
-                alert.setHeaderText("Errore nella gestione delle finestre");
+                alert.setHeaderText(GUI_ERROR_MSG);
                 break;
         }
         alert.showAndWait();

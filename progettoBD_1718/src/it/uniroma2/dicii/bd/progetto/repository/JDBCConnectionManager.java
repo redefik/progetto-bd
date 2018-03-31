@@ -12,6 +12,12 @@ import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
 public class JDBCConnectionManager {
 	
 	private final static String INVALID_DB_TYPE = "Database non valido";
+	private static final String CONFIGURATION_FILE = "/config.properties";
+	private static final String DBDRIVER_KEY = "dbdriver";
+	private static final String DBUSER_KEY = "dbuser";
+	private static final String DBPASSWORD_KEY = "dbpassword";
+	private static final String DB_URL_USER_KEY = "dburl_user";
+	private static final String DB_URL_SPACE_KEY = "dburl_space";
 	
 	private static JDBCConnectionManager instance;
 	private String dbUsername;
@@ -29,11 +35,11 @@ public class JDBCConnectionManager {
         if (instance == null) {
         	// Legge da un file .properties i parametri di accesso al database 
         	Properties properties = new Properties();
-            properties.load(JDBCConnectionManager.class.getResourceAsStream("/config.properties"));
-            String driverClass = properties.getProperty("dbdriver");
+            properties.load(JDBCConnectionManager.class.getResourceAsStream(CONFIGURATION_FILE));
+            String driverClass = properties.getProperty(DBDRIVER_KEY);
             Class.forName(driverClass);
-            String user = properties.getProperty("dbuser");
-            String password = properties.getProperty("dbpassword");
+            String user = properties.getProperty(DBUSER_KEY);
+            String password = properties.getProperty(DBPASSWORD_KEY);
             instance = new JDBCConnectionManager(user, password);
         }
         return instance;
@@ -48,17 +54,17 @@ public class JDBCConnectionManager {
     	
     	switch (type) {
     		case DB_USER:
-    			dbUrlKey = "dburl_user";
+    			dbUrlKey = DB_URL_USER_KEY;
     			break;
     		case DB_SPACE:
-    			dbUrlKey = "dburl_space";
+    			dbUrlKey = DB_URL_SPACE_KEY;
     			break;
     		default:
     			throw new ConfigurationError(INVALID_DB_TYPE);
     	}
     	
     	Properties properties = new Properties();
-        properties.load(JDBCConnectionManager.class.getResourceAsStream("/config.properties"));
+        properties.load(JDBCConnectionManager.class.getResourceAsStream(CONFIGURATION_FILE));
         dbUrl = properties.getProperty(dbUrlKey);
         Connection connection = DriverManager.getConnection(dbUrl, this.dbUsername, this.dbPassword);
         return connection;

@@ -25,6 +25,13 @@ public class LoginController {
 	@FXML
 	private Label errorMessage;
 	
+	private static final String MAIN_MENU = "../gui/mainView.fxml";
+	
+	@FXML
+	public void initialize() {
+		WindowManager.getInstance().setWindow(window);
+	}
+	
 	public void login() throws ConfigurationError, DataAccessError, GUIError {
 		
 		try {
@@ -43,7 +50,7 @@ public class LoginController {
 				// Se l'utente viene trovato, apro la finestra successiva passandole il bean corrispondente
 				MainController.setUser(userBean);
 			
-				WindowManager.getInstance().changeMenu("../gui/mainView.fxml");
+				WindowManager.getInstance().changeMenu(MAIN_MENU);
 			}
 		} catch(ConfigurationError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
@@ -61,10 +68,5 @@ public class LoginController {
 	// Elimina il messaggio di errore non appena l'utente riprova a inserire username o password
 	public void clearLabel() {
 		errorMessage.setVisible(false);
-	}
-	
-	@FXML
-	public void initialize() {
-		WindowManager.getInstance().setWindow(window);
 	}
 }

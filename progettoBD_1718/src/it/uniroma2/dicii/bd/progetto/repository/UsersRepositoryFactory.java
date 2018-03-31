@@ -9,6 +9,9 @@ public class UsersRepositoryFactory {
 	
 	private static UsersRepositoryFactory instance;
 	
+	private static final String CONFIGURATION_FILE = "/config.properties";
+	private static final String USERSREPOSITORY_TYPE_KEY = "usersrepository_type";
+	
 	protected UsersRepositoryFactory () {}
 	
     public synchronized static UsersRepositoryFactory getInstance() {
@@ -23,8 +26,8 @@ public class UsersRepositoryFactory {
     	try {
     		// Legge da un file .properties l'implementazione di UsersRepository da istanziare
     		Properties properties = new Properties();
-        	properties.load(getClass().getResourceAsStream("/config.properties"));
-        	String className = properties.getProperty("usersrepository_type");
+        	properties.load(getClass().getResourceAsStream(CONFIGURATION_FILE));
+        	String className = properties.getProperty(USERSREPOSITORY_TYPE_KEY);
         	Class<?> c = Class.forName(className);
         	UsersRepository usersRepository = (UsersRepository) c.newInstance();
         	return usersRepository;
