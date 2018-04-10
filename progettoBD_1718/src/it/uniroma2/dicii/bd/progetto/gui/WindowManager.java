@@ -19,6 +19,7 @@ public class WindowManager {
 	private static final String CONFIGURATION_ERROR_MSG = "Configurazione di sistema errata";
 	private static final String GUI_ERROR_MSG = "Errore nella gestione delle finestre";
 	
+	
     public void setWindow(AnchorPane window) {
 		this.window = window;
 	}

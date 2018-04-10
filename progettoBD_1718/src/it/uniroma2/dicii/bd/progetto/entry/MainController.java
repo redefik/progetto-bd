@@ -30,7 +30,8 @@ public class MainController {
 	
 	@FXML
 	public void initialize() {
-		welcomeMessage.setText(WELCOME + user.getNome() + " " + user.getCognome());
+		// Nella fase di inizializzazione viene stampato un messaggio di benvenuto 
+		welcomeMessage.setText(WELCOME + user.getFirstName() + " " + user.getLastName());
 		WindowManager.getInstance().setWindow(window);
 	}
 	

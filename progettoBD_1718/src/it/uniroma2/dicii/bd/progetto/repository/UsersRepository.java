@@ -8,5 +8,9 @@ import it.uniroma2.dicii.bd.progetto.user.User;
 public interface UsersRepository {
 
 	User findByUsernameAndPassword(String username, String password) throws ConfigurationError, DataAccessError;
+
+	boolean existsUserWithUsername(String username) throws DataAccessError, ConfigurationError;
 	
+	void persist(User user) throws ConfigurationError, DataAccessError;
+
 }

@@ -36,6 +36,8 @@
          </font>
       </Label>
       <TextField fx:id="username" layoutX="192.0" layoutY="87.0" onKeyTyped="#clearMessage" />
+      <PasswordField fx:id="password" layoutX="192.0" layoutY="123.0" onKeyTyped="#clearMessage" />
+      <PasswordField fx:id="confirmedPassword" layoutX="192.0" layoutY="162.0" onKeyTyped="#clearMessage" />
       <TextField fx:id="firstName" layoutX="192.0" layoutY="197.0" onKeyTyped="#clearMessage" />
       <TextField fx:id="lastName" layoutX="192.0" layoutY="237.0" onKeyTyped="#clearMessage" />
       <Label layoutX="76.0" layoutY="30.0" text="Inserisci i dati relativi all'utente che desideri inserire:">
@@ -49,8 +51,6 @@
          </font>
       </Label>
       <TextField fx:id="mail" layoutX="192.0" layoutY="279.0" onKeyTyped="#clearMessage" />
-      <PasswordField fx:id="password" layoutX="192.0" layoutY="123.0" onKeyTyped="#clearMessage" />
-      <PasswordField fx:id="confirmedPassword" layoutX="192.0" layoutY="162.0" onKeyTyped="#clearMessage" />
       <CheckBox fx:id="admin" layoutX="45.0" layoutY="321.0" mnemonicParsing="false" onKeyTyped="#clearMessage" prefHeight="27.0" prefWidth="149.0" text="Amministratore">
          <font>
             <Font size="14.0" />
@@ -66,7 +66,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="362.0" layoutY="91.0" text="(Minimo 6 caratteri)" />
-      <Label layoutX="362.0" layoutY="127.0" text="(Minimo 6 caratteri)" />
+      <Label layoutX="395.0" layoutY="91.0" prefHeight="17.0" prefWidth="105.0" text="(Minimo 6 caratteri)" AnchorPane.leftAnchor="400.0" />
+      <Label layoutX="400.0" layoutY="127.0" prefHeight="17.0" prefWidth="105.0" text="(Minimo 6 caratteri)" AnchorPane.leftAnchor="400.0" />
    </children>
 </AnchorPane>
