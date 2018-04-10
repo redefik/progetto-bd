@@ -44,14 +44,20 @@ public class AdministrationSession {
 		   usersRepository.persist(user);
 	   }
 
-	   public ArrayList<AgencyBean> findAllAgencies() throws ConfigurationError {
+	   public ArrayList<AgencyBean> findAllAgencies() throws ConfigurationError, DataAccessError {
 		   
 		   SatellitesRepositoryFactory satellitesRepositoryFactory = SatellitesRepositoryFactory.getInstance();
 		   SatellitesRepository satellitesRepository = satellitesRepositoryFactory.createSatellitesRepository();
 		   
-		   ArrayList<Agency> agencies;
+		   ArrayList<Agency> agencies = satellitesRepository.findAllAgencies();
 		   
-		   return null;
+		   ArrayList<AgencyBean> agencyBeans = new ArrayList<>();
+		   
+		   for (Agency agency : agencies) {
+			   agencyBeans.add(new AgencyBean(agency));
+		   }
+		   
+		   return agencyBeans;
 	   } 
 		    
 	    

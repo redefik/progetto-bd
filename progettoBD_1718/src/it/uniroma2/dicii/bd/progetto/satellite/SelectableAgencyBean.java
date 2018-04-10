@@ -4,8 +4,24 @@ import javafx.scene.control.CheckBox;
 
 public class SelectableAgencyBean extends AgencyBean{
 	
-	private CheckBox isSelected;
+	private CheckBox checkBox;
+	
+	public SelectableAgencyBean() {}
+	
+	public SelectableAgencyBean(String name) {
+		super();
+		super.setName(name);
+		checkBox = new CheckBox();
+	}
 
-	//TODO GET DELLA CHECK
+	public CheckBox getCheckBox() {
+		return checkBox;
+	}
+
+	public void setCheckBox(CheckBox isSelected) {
+		this.checkBox = isSelected;
+	}
+
+	
 	
 }

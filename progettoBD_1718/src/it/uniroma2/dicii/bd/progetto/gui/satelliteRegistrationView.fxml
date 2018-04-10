@@ -18,7 +18,7 @@
       <TextField fx:id="begin" layoutX="171.0" layoutY="133.0" />
       <TextField fx:id="end" layoutX="171.0" layoutY="182.0" />
       <TableView fx:id="tableAgency" layoutX="63.0" layoutY="276.0" prefHeight="200.0" prefWidth="175.0" />
-      <Button layoutX="233.0" layoutY="511.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="134.0" text="Inserisci">
+      <Button layoutX="233.0" layoutY="511.0" mnemonicParsing="false" onAction="#registerSatellite" prefHeight="35.0" prefWidth="134.0" text="Inserisci">
          <font>
             <Font size="14.0" />
          </font>

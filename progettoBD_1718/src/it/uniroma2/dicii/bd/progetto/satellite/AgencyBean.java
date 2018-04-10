@@ -5,6 +5,10 @@ public class AgencyBean {
 	protected String name;
 	
 	public AgencyBean() {}
+	
+	public AgencyBean(Agency agency) {
+		this.name = agency.getName();
+	}
 
 	public String getName() {
 		return name;

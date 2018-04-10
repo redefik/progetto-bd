@@ -105,10 +105,10 @@ public class UserRegistrationController {
 					errorMessage.setText(NOT_AVAILABLE_USERNAME);
 				}
 			} catch(ConfigurationError e1) {
-				Logger.getLogger(getClass()).error(e.getMessage(), e);
+				Logger.getLogger(getClass()).error(e1.getMessage(), e1);
 				WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
 			} catch(DataAccessError e1) {
-				Logger.getLogger(getClass()).error(e.getMessage(), e);
+				Logger.getLogger(getClass()).error(e1.getMessage(), e1);
 				WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
 			}
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
