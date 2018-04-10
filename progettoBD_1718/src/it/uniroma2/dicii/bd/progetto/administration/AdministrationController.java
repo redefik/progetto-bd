@@ -11,7 +11,8 @@ import javafx.scene.layout.AnchorPane;
 public class AdministrationController {
 	
 	private static final String REGISTRATION_USER_MENU = "../gui/userRegistrationView.fxml";
-	
+	private static final String REGISTRATION_SATELLITE_MENU = "../gui/satelliteRegistrationView.fxml";
+
 	
 	@FXML
 	private AnchorPane window; 
@@ -19,6 +20,15 @@ public class AdministrationController {
 	public void registerUser() {
 		try {
 			WindowManager.getInstance().changeMenu(REGISTRATION_USER_MENU);
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
+	
+	public void registerSatellite() {
+		try {
+			WindowManager.getInstance().changeMenu(REGISTRATION_SATELLITE_MENU);
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
