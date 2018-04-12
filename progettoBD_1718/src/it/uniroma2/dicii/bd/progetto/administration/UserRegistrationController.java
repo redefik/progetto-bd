@@ -64,11 +64,11 @@ public class UserRegistrationController {
 				return;
 			}
 			
-			// Si verifica che lo username non sia attualmente in uso
-			if (!isAvailableUsername(username.getText())) {
-				errorMessage.setText(NOT_AVAILABLE_USERNAME);
-				return;
-			}
+//			// Si verifica che lo username non sia attualmente in uso
+//			if (!isAvailableUsername(username.getText())) {
+//				errorMessage.setText(NOT_AVAILABLE_USERNAME);
+//				return;
+//			}
 			
 			// Si registra l'utente
 			UserBean userBean = new UserBean();
@@ -98,8 +98,7 @@ public class UserRegistrationController {
 			WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
 		} catch(DataAccessError e) {
 			
-			//Si gestisce l'eventualita' in cui nel tempo che intercorre tra il controllo dell'username e
-			//l'inserimento dell'utente, un altro amministratore inserisce un altro utente con lo stesso username
+			// In caso di fallimento si controlla se l'username e' stato gia' utilizzato
 			try {
 				if (!isAvailableUsername(username.getText())) {
 					errorMessage.setText(NOT_AVAILABLE_USERNAME);

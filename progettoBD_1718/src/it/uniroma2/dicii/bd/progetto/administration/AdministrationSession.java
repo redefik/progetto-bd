@@ -8,6 +8,9 @@ import it.uniroma2.dicii.bd.progetto.repository.UsersRepository;
 import it.uniroma2.dicii.bd.progetto.repository.UsersRepositoryFactory;
 import it.uniroma2.dicii.bd.progetto.satellite.Agency;
 import it.uniroma2.dicii.bd.progetto.satellite.AgencyBean;
+import it.uniroma2.dicii.bd.progetto.satellite.Satellite;
+import it.uniroma2.dicii.bd.progetto.satellite.SatelliteBean;
+import it.uniroma2.dicii.bd.progetto.satellite.SelectableAgencyBean;
 import it.uniroma2.dicii.bd.progetto.user.User;
 import it.uniroma2.dicii.bd.progetto.user.UserBean;
 import java.util.ArrayList;
@@ -58,7 +61,25 @@ public class AdministrationSession {
 		   }
 		   
 		   return agencyBeans;
-	   } 
+	   }
+
+	public void registerSatellite(SatelliteBean satelliteBean, ArrayList<SelectableAgencyBean> selectedAgencies) throws ConfigurationError, DataAccessError {
+		Satellite satellite = new Satellite(satelliteBean);
+		ArrayList<Agency> agencies = new ArrayList<Agency>();
+		for (SelectableAgencyBean elem : selectedAgencies) {
+			agencies.add(new Agency(elem.getName()));
+		}
+		
+		 SatellitesRepositoryFactory satellitesRepositoryFactory = SatellitesRepositoryFactory.getInstance();
+		 SatellitesRepository satellitesRepository = satellitesRepositoryFactory.createSatellitesRepository();
+		 satellitesRepository.persistSatellite(satellite, agencies);
+	}
+
+	public boolean isAvailableName(String name) throws ConfigurationError, DataAccessError {
+		SatellitesRepositoryFactory satellitesRepositoryFactory = SatellitesRepositoryFactory.getInstance();
+		SatellitesRepository satellitesRepository = satellitesRepositoryFactory.createSatellitesRepository();
+		return satellitesRepository.existsSatelliteWithName(name);
+	} 
 		    
 	    
 	    
