@@ -64,12 +64,6 @@ public class UserRegistrationController {
 				return;
 			}
 			
-//			// Si verifica che lo username non sia attualmente in uso
-//			if (!isAvailableUsername(username.getText())) {
-//				errorMessage.setText(NOT_AVAILABLE_USERNAME);
-//				return;
-//			}
-			
 			// Si registra l'utente
 			UserBean userBean = new UserBean();
 			userBean.setFirstName(firstName.getText());
@@ -102,6 +96,9 @@ public class UserRegistrationController {
 			try {
 				if (!isAvailableUsername(username.getText())) {
 					errorMessage.setText(NOT_AVAILABLE_USERNAME);
+				}else {
+					Logger.getLogger(getClass()).error(e.getMessage(), e);
+					WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
 				}
 			} catch(ConfigurationError e1) {
 				Logger.getLogger(getClass()).error(e1.getMessage(), e1);
@@ -110,8 +107,6 @@ public class UserRegistrationController {
 				Logger.getLogger(getClass()).error(e1.getMessage(), e1);
 				WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
 			}
-			Logger.getLogger(getClass()).error(e.getMessage(), e);
-			WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
 		} 
 	}
 	

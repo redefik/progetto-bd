@@ -10,6 +10,15 @@ public class Satellite {
 	private Date endDate;
 	private ArrayList<Instrument> instruments;
 	
+	
+	
+	public Satellite(String name, Date beginDate, Date endDate) {
+		this.name = name;
+		this.beginDate = beginDate;
+		this.endDate = endDate;
+		this.instruments = new ArrayList<Instrument>();
+	}
+
 	public Satellite(SatelliteBean satelliteBean) {
 		
 		this.name = satelliteBean.getName();

@@ -73,6 +73,8 @@ public class SatelliteRegistrationController {
 		try {
 			WindowManager.getInstance().setWindow(window);
 			
+			// Si inizializza la tabella con tutte le agenzie presenti nel DB. In questo modo l'utente amministratore
+			// puo' selezionare tra quelle presenti le agenzie che hanno partecipato alla missione relativa al satellite
 			tableAgency.setEditable(true);
 			agencyName.setCellValueFactory(new PropertyValueFactory<SelectableAgencyBean, String>("name"));
 	        agencySelection.setCellValueFactory(new PropertyValueFactory<SelectableAgencyBean, CheckBox>("checkBox"));
@@ -102,6 +104,7 @@ public class SatelliteRegistrationController {
 			Date endDate = null;
 			String satelliteName;
 			
+			// Si verifica che sia stato inserito un nome
 			if (name.getText().equals("")) {
 				errorMessage.setText(NOT_INSERTED_NAME);
 				return;
@@ -111,20 +114,26 @@ public class SatelliteRegistrationController {
 			
 			SimpleDateFormat dateParser = new SimpleDateFormat("dd/MM/yyyy");
 			
+			// Si verifica che sia stata inserita una data di inizio attivita' e in caso affermativo 
+			// si verifica anche che sia nel formato corretto
 			if (begin.getText().equals("")) {
 				errorMessage.setText(NOT_INSERTED_DATE);
 				return;
 			}
 			beginDate = dateParser.parse(begin.getText());
+			
+			// Se la data di termine attivita' e' stata inserita si controlla se e' nel formato corretto
 			if (!end.getText().equals("")) {
 				endDate = dateParser.parse(end.getText());
 			}
 		
+			// Si verifica che la data di termine attivita' sia successiva a quella di inizio
 			if (endDate!= null && beginDate.after(endDate)) {
 				errorMessage.setText(INVALID_RANGE_DATE_MESSAGE);
 				return;
 			}
 			
+			// Si crea una lista con tutte le agezie che hanno partecipato alla missione relativa al satellite
 			ArrayList<SelectableAgencyBean> selectedAgencies = new ArrayList<SelectableAgencyBean>();
 			for (SelectableAgencyBean elem : agencyBeans) {
 				if (elem.getCheckBox().isSelected()) {
@@ -137,6 +146,7 @@ public class SatelliteRegistrationController {
 				return;
 			}
 			
+			// Se i controlli vengono superati si registra il satellite
 	        SatelliteBean satelliteBean = new SatelliteBean(satelliteName, beginDate, endDate);
 	        AdministrationSession.getInstance().registerSatellite(satelliteBean, selectedAgencies);
 	        
@@ -152,9 +162,13 @@ public class SatelliteRegistrationController {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
 		} catch(DataAccessError e) {
+			// Se l'inserimento fallisce si controlla che non esista gia' un satellite con il nome specificato
 			try {
 				if (AdministrationSession.getInstance().isAvailableName(name.getText())) {
 					errorMessage.setText(INVALID_NAME_MESSAGE);
+				}else {
+					Logger.getLogger(getClass()).error(e.getMessage(), e);
+					WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
 				}
 			} catch (DataAccessError e1) {
 				Logger.getLogger(getClass()).error(e1.getMessage(), e1);
@@ -163,6 +177,7 @@ public class SatelliteRegistrationController {
 				Logger.getLogger(getClass()).error(e1.getMessage(), e1);
 				WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
 			}
+			
 		} catch(GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);

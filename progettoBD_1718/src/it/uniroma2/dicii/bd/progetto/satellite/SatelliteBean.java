@@ -18,6 +18,19 @@ public class SatelliteBean {
 		this.instrumentBeans = new ArrayList<InstrumentBean>();
 	}
 
+	public SatelliteBean(Satellite satellite) {
+			
+			this.name = satellite.getName();
+			this.beginDate = satellite.getBeginDate();
+			this.endDate = satellite.getEndDate();
+			this.instrumentBeans = new ArrayList<InstrumentBean>();
+			
+			for (Instrument instrument : satellite.getInstruments()) {
+				InstrumentBean instrumentBean = new InstrumentBean(instrument);
+				instrumentBeans.add(instrumentBean);
+			}
+		}
+
 	public String getName() {
 		return name;
 	}
@@ -50,5 +63,8 @@ public class SatelliteBean {
 		this.instrumentBeans = instrumentBeans;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return this.name;
+	}
 }

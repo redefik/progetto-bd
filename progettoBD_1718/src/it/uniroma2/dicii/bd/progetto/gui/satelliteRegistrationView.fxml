@@ -16,12 +16,12 @@
          </font>
       </Label>
       <TextField fx:id="name" layoutX="171.0" layoutY="89.0" onKeyTyped="#clearMessage" />
-      <TextField fx:id="begin" layoutX="171.0" layoutY="133.0" onKeyTyped="#clearMessage" />
-      <TextField fx:id="end" layoutX="171.0" layoutY="182.0" onKeyTyped="#clearMessage" />
-      <TableView fx:id="tableAgency" layoutX="63.0" layoutY="276.0" prefHeight="161.0" prefWidth="164.0">
+      <TextField fx:id="begin" layoutX="171.0" layoutY="133.0" onKeyTyped="#clearMessage" promptText="GG/MM/AAAA" />
+      <TextField fx:id="end" layoutX="171.0" layoutY="182.0" onKeyTyped="#clearMessage" promptText="GG/MM/AAAA" />
+      <TableView fx:id="tableAgency" layoutX="63.0" layoutY="276.0" prefHeight="161.0" prefWidth="167.0">
          <columns>
-            <TableColumn fx:id="agencyName" prefWidth="134.0" text="Nome" />
-            <TableColumn fx:id="agencySelection" prefWidth="29.0" />
+            <TableColumn fx:id="agencyName" prefWidth="135.0" text="Nome" />
+            <TableColumn fx:id="agencySelection" prefWidth="30.0" />
          </columns></TableView>
       <Button layoutX="226.0" layoutY="458.0" mnemonicParsing="false" onAction="#registerSatellite" prefHeight="35.0" prefWidth="134.0" text="Inserisci">
          <font>

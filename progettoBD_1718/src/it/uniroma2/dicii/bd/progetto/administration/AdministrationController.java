@@ -12,6 +12,8 @@ public class AdministrationController {
 	
 	private static final String REGISTRATION_USER_MENU = "../gui/userRegistrationView.fxml";
 	private static final String REGISTRATION_SATELLITE_MENU = "../gui/satelliteRegistrationView.fxml";
+	private static final String REGISTRATION_INSTRUMENT_MENU = "../gui/instrumentRegistrationView.fxml";
+	private static final String MAIN_VIEW_MENU = "../gui/mainView.fxml";
 
 	
 	@FXML
@@ -35,8 +37,28 @@ public class AdministrationController {
 		}
 	}
 	
+	public void registerInstrument() {
+		try {
+			WindowManager.getInstance().changeMenu(REGISTRATION_INSTRUMENT_MENU);
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
+	
+	public void backToMainView() {
+		try {
+			WindowManager.getInstance().changeMenu(MAIN_VIEW_MENU);
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
+
+	
 	@FXML
 	public void initialize() {
 		WindowManager.getInstance().setWindow(window);
 	}
+
 }
