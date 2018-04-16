@@ -27,5 +27,6 @@
          </font>
       </Button>
       <Button layoutX="45.0" layoutY="27.0" mnemonicParsing="false" onAction="#gotoPreviousMenu" text="Indietro" />
+      <Button layoutX="45.0" layoutY="324.0" mnemonicParsing="false" onAction="#goToImportMenu" prefHeight="56.0" prefWidth="519.0" text="Importa File" />
    </children>
 </AnchorPane>

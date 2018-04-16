@@ -14,6 +14,7 @@ public class AdministrationController {
 	private static final String REGISTRATION_SATELLITE_MENU = "../gui/satelliteRegistrationView.fxml";
 	private static final String REGISTRATION_INSTRUMENT_MENU = "../gui/instrumentRegistrationView.fxml";
 	private static final String MAIN_VIEW_MENU = "../gui/mainView.fxml";
+	private static final String IMPORT_MENU = "../gui/fileImportView.fxml";
 
 	
 	@FXML
@@ -64,6 +65,15 @@ public class AdministrationController {
 	public void gotoPreviousMenu() {
 		try {
 			WindowManager.getInstance().goToPreviousMenu();
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
+
+	public void goToImportMenu() {
+		try {
+			WindowManager.getInstance().changeMenu(IMPORT_MENU);
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);

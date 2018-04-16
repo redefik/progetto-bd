@@ -1,5 +1,6 @@
 package it.uniroma2.dicii.bd.progetto.gui;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Stack;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ErrorType;
@@ -9,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 // Classe Singleton
@@ -23,6 +25,7 @@ public class WindowManager {
 	private static final String DATA_ACCESS_ERROR_MSG = "Accesso ai dati non riuscito";
 	private static final String CONFIGURATION_ERROR_MSG = "Configurazione di sistema errata";
 	private static final String GUI_ERROR_MSG = "Errore nella gestione delle finestre";
+	private static final String CSV_PARSING_ERROR_MSG = "Il contenuto del file selezionato non e' valido";
 	
 	
     public void setWindow(AnchorPane window) {
@@ -77,6 +80,9 @@ public class WindowManager {
             case GUI:
                 alert.setHeaderText(GUI_ERROR_MSG);
                 break;
+            case CSVFILE_PARSING:
+            	alert.setHeaderText(CSV_PARSING_ERROR_MSG);
+            	break;
         }
         alert.showAndWait();
     }
@@ -94,5 +100,12 @@ public class WindowManager {
 			String menuToOpen = previousMenu.pop();
 			openMenu(menuToOpen);
 		}
+	}
+	
+	public File getFileFromSystemExplorerWithFormat(String formatName, String formatExtension) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(formatName, formatExtension));
+		File selectedFile = fileChooser.showOpenDialog(null);
+		return selectedFile;
 	}
 }
