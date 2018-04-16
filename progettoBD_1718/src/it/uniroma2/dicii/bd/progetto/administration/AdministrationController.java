@@ -61,4 +61,13 @@ public class AdministrationController {
 		WindowManager.getInstance().setWindow(window);
 	}
 
+	public void gotoPreviousMenu() {
+		try {
+			WindowManager.getInstance().goToPreviousMenu();
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
+
 }

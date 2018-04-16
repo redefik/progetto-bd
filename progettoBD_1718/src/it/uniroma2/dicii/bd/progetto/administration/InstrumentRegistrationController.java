@@ -1,9 +1,7 @@
 package it.uniroma2.dicii.bd.progetto.administration;
 
 import java.util.ArrayList;
-
 import org.apache.log4j.Logger;
-
 import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ErrorType;
@@ -140,6 +138,15 @@ public class InstrumentRegistrationController {
 		} catch (ConfigurationError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
+		}
+	}
+	
+	public void gotoPreviousMenu() {
+		try {
+			WindowManager.getInstance().goToPreviousMenu();
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
 		}
 	}
 

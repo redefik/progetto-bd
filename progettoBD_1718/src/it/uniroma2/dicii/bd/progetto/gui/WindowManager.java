@@ -1,6 +1,7 @@
 package it.uniroma2.dicii.bd.progetto.gui;
 
 import java.io.IOException;
+import java.util.Stack;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ErrorType;
 import it.uniroma2.dicii.bd.progetto.errorLogic.GUIError;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,10 @@ public class WindowManager {
 	
 	private AnchorPane window;
 	
+	// La pila memorizza gli ultimi menu visitati: l'elemento in cima e' l'ultimo, quello sotto il penultimo e cosi' via...
+	private Stack<String> previousMenu;
+	private String currentMenu;
+	
 	private static final String DATA_ACCESS_ERROR_MSG = "Accesso ai dati non riuscito";
 	private static final String CONFIGURATION_ERROR_MSG = "Configurazione di sistema errata";
 	private static final String GUI_ERROR_MSG = "Errore nella gestione delle finestre";
@@ -26,7 +31,9 @@ public class WindowManager {
 
 	private static WindowManager instance;
 
-    private WindowManager() {}
+    private WindowManager() {
+    	this.previousMenu = new Stack<>();
+    }
 
     public synchronized static WindowManager getInstance() {
         if (instance == null) {
@@ -35,17 +42,27 @@ public class WindowManager {
         return instance;
     }
     
+    private void openMenu(String menuToOpen) throws GUIError {
+    	try {
+    		this.currentMenu = menuToOpen;
+	    	Stage stage = (Stage) window.getScene().getWindow();
+			Parent root = FXMLLoader.load(WindowManager.class.getResource(menuToOpen));
+			stage.hide();
+			stage.setScene(new Scene(root));
+			stage.show();
+    	} catch (IOException | NullPointerException e) {
+			throw new GUIError(e.getMessage(), e.getCause());
+		}
+    }
+    
 	public void changeMenu (String nextMenu) throws GUIError {
-	try {
-		Stage stage = (Stage) window.getScene().getWindow();
-		Parent root = FXMLLoader.load(WindowManager.class.getResource(nextMenu));
-		stage.hide();
-		stage.setScene(new Scene(root));
-		stage.show();
-	} catch (IOException | NullPointerException e) {
-		throw new GUIError(e.getMessage(), e.getCause());
+		if (currentMenu != null) {
+			// il menu attuale diventa l'ultimo visitato
+			previousMenu.add(currentMenu);
+		}
+		// il menu da aprire e' quello passato come argomento
+		openMenu(nextMenu);
 	}
-}
 	
 	public void openErrorWindow(ErrorType error) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -70,4 +87,12 @@ public class WindowManager {
         alert.setHeaderText(message);
         alert.showAndWait();
     }
+	
+	public void goToPreviousMenu() throws GUIError {
+		if (!previousMenu.isEmpty()) {
+			// il menu da aprire e' l'ultimo visitato (in cima allo stack)
+			String menuToOpen = previousMenu.pop();
+			openMenu(menuToOpen);
+		}
+	}
 }
