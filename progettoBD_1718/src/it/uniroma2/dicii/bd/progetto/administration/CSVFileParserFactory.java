@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.Properties;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
 
+//La classe incapsula la logica di creazione per un oggetto che implementa CSVFileParser. La classe concreta usata in questa 
+//versione del programma potrebbe cambiare in futuro.
+
+//Classe singleton
 public class CSVFileParserFactory {
 	
 	private static CSVFileParserFactory instance;

@@ -4,13 +4,28 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="window" prefHeight="189.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.dicii.bd.progetto.administration.FilamentsImportController">
+<AnchorPane fx:id="window" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.dicii.bd.progetto.administration.FilamentsImportController">
    <children>
-      <Button layoutX="449.0" layoutY="42.0" mnemonicParsing="false" onAction="#selectFile" prefHeight="31.0" prefWidth="125.0" text="Seleziona il File" />
-      <Button layoutX="449.0" layoutY="110.0" mnemonicParsing="false" onAction="#importFile" text="Importa" />
-      <Button layoutX="60.0" layoutY="110.0" mnemonicParsing="false" onAction="#gotoPreviousMenu" text="Indietro" />
-      <TextField fx:id="importedFilePath" editable="false" layoutX="60.0" layoutY="42.0" prefHeight="31.0" prefWidth="365.0" />
-      <Label fx:id="errorMessage" layoutX="60.0" layoutY="154.0" prefHeight="21.0" prefWidth="508.0" textFill="RED" />
+      <Button layoutX="449.0" layoutY="125.0" mnemonicParsing="false" onAction="#selectFile" prefHeight="31.0" prefWidth="125.0" text="Seleziona ">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <Button layoutX="230.0" layoutY="187.0" mnemonicParsing="false" onAction="#importFile" prefHeight="43.0" prefWidth="140.0" text="Importa">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <Button layoutX="32.0" layoutY="29.0" mnemonicParsing="false" onAction="#gotoPreviousMenu" text="Indietro">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <TextField fx:id="importedFilePath" editable="false" layoutX="46.0" layoutY="125.0" prefHeight="31.0" prefWidth="373.0" />
+      <Label fx:id="errorMessage" layoutX="46.0" layoutY="262.0" prefHeight="21.0" prefWidth="508.0" textAlignment="CENTER" textFill="RED" />
+      <Label layoutX="138.0" layoutY="71.0" text="Seleziona il file di filamenti da importare:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

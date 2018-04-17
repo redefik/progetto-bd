@@ -41,9 +41,12 @@ public class FilamentsImportController {
 		WindowManager.getInstance().setWindow(window);
 	}
 
+
 	public void selectFile() {
 		errorMessage.setText("");
 		WindowManager windowManager = WindowManager.getInstance();
+		//Si permette all'utente di scegliere dal proprio disposito il file da importare, si permette la ricerca solo 
+		//tra file di uno specifico formato (nel caso specifico .csv)
 		importedFile = windowManager.getFileFromSystemExplorerWithFormat(IMPORT_FILE_FORMAT_NAME, IMPORT_FILE_FORMAT_EXTENSION);
 		if (importedFile != null) {
 			importedFilePath.setText(importedFile.getAbsolutePath());
@@ -52,14 +55,20 @@ public class FilamentsImportController {
 
 	public void importFile() {
 		try {
+			// Se l'utente non ha specificato un file da importare si stampa un messaggio di errore
 			if (importedFile == null) {
 				errorMessage.setText(NOT_SELECTED_FILE_MESSAGE);
 				return;
 			}
+			
+			// Si instanzia mediante l'uso di una factory un parser per il file da importare
 			CSVFileParserFactory parserFactory = CSVFileParserFactory.getInstance();
 			CSVFileParser parser = parserFactory.createCSVFileParser();
+			
+			//Si delega a un oggetto di tipo CSVFileParser il parser del file per ottenere una lista di FilamentBean
 			ArrayList<FilamentBean> filamentBeans = parser.getFilamentBeans(importedFile);
 			
+			//Si delega alla classe AdministrationSession l'inserimento dei filamenti in persistenza
 			AdministrationSession administrationSession = AdministrationSession.getInstance();
 			administrationSession.insertFilaments(filamentBeans);
 			

@@ -118,6 +118,7 @@ public class AdministrationSession {
 	
 		}
 
+		// Il metodo delega a un oggetto filamentsRepository l'inserimento di una lista di filamenti in persistenza
 		public void insertFilaments(ArrayList<FilamentBean> filamentBeans) throws ConfigurationError, DataAccessError, BatchError {
 			
 			ArrayList<Filament> filaments = new ArrayList<Filament>();

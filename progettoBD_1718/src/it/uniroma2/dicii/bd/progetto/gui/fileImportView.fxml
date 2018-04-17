@@ -2,10 +2,17 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="window" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.dicii.bd.progetto.administration.FileImportController">
    <children>
-      <Button layoutX="41.0" layoutY="76.0" mnemonicParsing="false" onAction="#goToFilamentsImportView" prefHeight="56.0" prefWidth="519.0" text="Importa Filamenti" />
-      <Button layoutX="41.0" layoutY="14.0" mnemonicParsing="false" onAction="#gotoPreviousMenu" text="Indietro" />
+      <Button layoutX="41.0" layoutY="92.0" mnemonicParsing="false" onAction="#goToFilamentsImportView" prefHeight="56.0" prefWidth="519.0" text="Importa Filamenti">
+         <font>
+            <Font size="16.0" />
+         </font></Button>
+      <Button layoutX="41.0" layoutY="29.0" mnemonicParsing="false" onAction="#gotoPreviousMenu" text="Indietro">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
    </children>
 </AnchorPane>

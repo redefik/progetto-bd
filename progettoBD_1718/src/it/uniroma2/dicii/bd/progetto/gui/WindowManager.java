@@ -25,7 +25,7 @@ public class WindowManager {
 	
 	private AnchorPane window;
 	
-	// La pila memorizza gli ultimi menu visitati: l'elemento in cima e' l'ultimo, quello sotto il penultimo e cosi' via...
+	// La pila memorizza gli ultimi menu' visitati: l'elemento in cima e' l'ultimo, quello sottos il penultimo e cosi' via.
 	private Stack<String> previousMenu;
 	private String currentMenu;
 	

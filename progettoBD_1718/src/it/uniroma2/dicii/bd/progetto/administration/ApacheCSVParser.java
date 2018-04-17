@@ -20,11 +20,16 @@ public class ApacheCSVParser extends CSVFileParser{
 		CSVParser csvFileParser = null;
 		FileReader fileReader = null;
 		try {	
+			//Si specifica il formato che le righe del file csv devono rispettare e il file da parsare
 			CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader(super.FILAMENTS_FILE_HEADERS);
 			fileReader = new FileReader(importedFile);
+			
 			csvFileParser = new CSVParser(fileReader, csvFileFormat);
+			
+			//Per ogni oggetto di tipo CSVRecord ottenuto dal parsing si crea un oggetto di tipo FilamentoBean
 			List<CSVRecord> csvRecords = csvFileParser.getRecords();
 			ArrayList<FilamentBean> filamentBeans = new ArrayList<>();
+			
 			// Nota: nel ciclo viene saltata la riga contenente gli header
 			for (int i = 1; i < csvRecords.size(); ++i) {
 				CSVRecord record = (CSVRecord)csvRecords.get(i);
@@ -37,9 +42,11 @@ public class ApacheCSVParser extends CSVFileParser{
 				filamentBeans.add(filamentBean);
 			}
 			return filamentBeans;
+			
 		} catch (IOException | IllegalArgumentException e) {
 			throw new CSVFileParserException(e.getMessage(), e.getCause());
 		} finally {
+			//Terminato il parsing del file, viene rilasciato il parser
 			if (csvFileParser != null) {
 				try {
 					csvFileParser.close();
@@ -47,6 +54,7 @@ public class ApacheCSVParser extends CSVFileParser{
 					throw new CSVFileParserException(e.getMessage(), e.getCause());
 				}
 			}
+			//Terminato il parsing del file, viene chiuso il canale in lettura con esso
 			if (fileReader != null) {
 				try {
 					fileReader.close();

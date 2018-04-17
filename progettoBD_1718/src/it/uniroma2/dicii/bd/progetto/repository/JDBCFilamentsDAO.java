@@ -29,10 +29,14 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 			//Si richiede una connessione al JDBCConnectionPool
 			jdbcConnectionPool = JDBCConnectionPool.getInstance();
 			connection = jdbcConnectionPool.getConnection();
+			
+			//Si imposta l'autocommit a false. Infatti se l'inserimento di una tupla nel database fallisce allora
+			//e' neccessario effettuare un rollback
 			connection.setAutoCommit(false);
 			
 			PreparedStatement statement = connection.prepareStatement(INSERT_FILAMENT_QUERY);
 			
+			//Per ogni filamento da memorizzare si genera una query per l'inserimento e si aggiunge al Batch
 			for (Filament filament : filaments) {
 				statement.setString(1, filament.getName());
 				statement.setInt(2, filament.getNumber());
@@ -44,6 +48,7 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 				statement.addBatch();
 			}
 		
+			//Si esegue il batch e se l'operazione ha successo si effettua il commit
 			statement.executeBatch();
 			connection.commit();
 			
@@ -51,8 +56,17 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 		} catch (IOException | ClassNotFoundException | NullPointerException e) {
 			throw new ConfigurationError(e.getMessage(), e.getCause());
 		} catch (BatchUpdateException e) {
+			//Se una delle query nel batch fallisce si effettua il rollback e si solleva un eccezione ad hoc
+			if (connection != null) {
+				try {
+					connection.rollback();
+				} catch(SQLException e1) {
+					throw new DataAccessError(e1.getMessage(), e1.getCause());
+				}
+			}
 			throw new BatchError(e.getMessage(), e.getCause());
 		} catch (SQLException e) {
+			//Se viene sollevata una eccezione durante le operazioni sul database si effettua il rollback
 			if (connection != null) {
 				try {
 					connection.rollback();

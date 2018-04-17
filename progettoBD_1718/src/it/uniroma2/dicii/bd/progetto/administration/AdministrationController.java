@@ -13,7 +13,6 @@ public class AdministrationController {
 	private static final String REGISTRATION_USER_MENU = "../gui/userRegistrationView.fxml";
 	private static final String REGISTRATION_SATELLITE_MENU = "../gui/satelliteRegistrationView.fxml";
 	private static final String REGISTRATION_INSTRUMENT_MENU = "../gui/instrumentRegistrationView.fxml";
-	private static final String MAIN_VIEW_MENU = "../gui/mainView.fxml";
 	private static final String IMPORT_MENU = "../gui/fileImportView.fxml";
 
 	
@@ -47,9 +46,10 @@ public class AdministrationController {
 		}
 	}
 	
-	public void backToMainView() {
+
+	public void goToImportMenu() {
 		try {
-			WindowManager.getInstance().changeMenu(MAIN_VIEW_MENU);
+			WindowManager.getInstance().changeMenu(IMPORT_MENU);
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
@@ -71,13 +71,5 @@ public class AdministrationController {
 		}
 	}
 
-	public void goToImportMenu() {
-		try {
-			WindowManager.getInstance().changeMenu(IMPORT_MENU);
-		} catch (GUIError e) {
-			Logger.getLogger(getClass()).error(e.getMessage(), e);
-			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
-		}
-	}
 
 }

@@ -84,6 +84,8 @@ public class JDBCConnectionPool {
 		if (this.connections.size() > NUMBER_OF_CONNECTION) {
 			connection.close();
 		} else {
+			//Prima di reinserire una connessione nel pool viene impostato l'autocommit a true nel caso in cui qualche
+			//utilizzatore avesse sfruttato la modalita' di commit manuale
 			connection.setAutoCommit(true);
 			this.connections.add(connection);
 		}
