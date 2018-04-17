@@ -5,8 +5,10 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import it.uniroma2.dicii.bd.progetto.errorLogic.BatchError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.CSVFileParserException;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
+import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ErrorType;
 import it.uniroma2.dicii.bd.progetto.errorLogic.GUIError;
 import it.uniroma2.dicii.bd.progetto.filament.FilamentBean;
@@ -20,8 +22,11 @@ public class FilamentsImportController {
 	
 	private static final String IMPORT_FILE_FORMAT_NAME = "csv";
 	private static final String IMPORT_FILE_FORMAT_EXTENSION = "*.csv";
-	private static final String NOT_SELECTED_FILE_MESSAGE = "Seleziona prima un file da importare";
-	
+	private static final String NOT_SELECTED_FILE_MESSAGE = "Seleziona prima un file da importare.";
+	private static final String IMPORT_SUCCESS = "Import del file completato.";
+	private static final String ADMINISTRATION_MENU = "../gui/administrationView.fxml";
+	private static final String IMPORT_FAILED = "Import del file non riuscito.";
+
 	private File importedFile;
 
 	@FXML 
@@ -54,17 +59,27 @@ public class FilamentsImportController {
 			CSVFileParserFactory parserFactory = CSVFileParserFactory.getInstance();
 			CSVFileParser parser = parserFactory.createCSVFileParser();
 			ArrayList<FilamentBean> filamentBeans = parser.getFilamentBeans(importedFile);
-			//DEBUG
-			for (FilamentBean fb : filamentBeans) {
-				System.out.println(fb.getName());
-			}
-			//TODO popolamento del database
+			
+			AdministrationSession administrationSession = AdministrationSession.getInstance();
+			administrationSession.insertFilaments(filamentBeans);
+			
+			WindowManager.getInstance().openInfoWindow(IMPORT_SUCCESS);
+			WindowManager.getInstance().changeMenu(ADMINISTRATION_MENU);
+			
 		} catch(ConfigurationError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
 		} catch(CSVFileParserException e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.CSVFILE_PARSING);
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		} catch (BatchError e) {
+			WindowManager.getInstance().openDetailedErrorWindow(IMPORT_FAILED, e.getMessage());
+		} catch (DataAccessError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
 		}
 	}
 

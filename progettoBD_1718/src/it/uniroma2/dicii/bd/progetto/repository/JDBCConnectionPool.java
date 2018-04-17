@@ -84,6 +84,7 @@ public class JDBCConnectionPool {
 		if (this.connections.size() > NUMBER_OF_CONNECTION) {
 			connection.close();
 		} else {
+			connection.setAutoCommit(true);
 			this.connections.add(connection);
 		}
 	}

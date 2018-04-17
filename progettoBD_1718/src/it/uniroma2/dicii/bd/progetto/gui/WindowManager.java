@@ -16,17 +16,18 @@ import javafx.stage.Stage;
 // Classe Singleton
 public class WindowManager {
 	
-	private AnchorPane window;
 	
-	// La pila memorizza gli ultimi menu visitati: l'elemento in cima e' l'ultimo, quello sotto il penultimo e cosi' via...
-	private Stack<String> previousMenu;
-	private String currentMenu;
 	
 	private static final String DATA_ACCESS_ERROR_MSG = "Accesso ai dati non riuscito";
 	private static final String CONFIGURATION_ERROR_MSG = "Configurazione di sistema errata";
 	private static final String GUI_ERROR_MSG = "Errore nella gestione delle finestre";
 	private static final String CSV_PARSING_ERROR_MSG = "Il contenuto del file selezionato non e' valido";
 	
+	private AnchorPane window;
+	
+	// La pila memorizza gli ultimi menu visitati: l'elemento in cima e' l'ultimo, quello sotto il penultimo e cosi' via...
+	private Stack<String> previousMenu;
+	private String currentMenu;
 	
     public void setWindow(AnchorPane window) {
 		this.window = window;
@@ -91,6 +92,14 @@ public class WindowManager {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Info");
         alert.setHeaderText(message);
+        alert.showAndWait();
+    }
+	
+	public void openDetailedErrorWindow(String header, String text) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Errore");
+        alert.setHeaderText(header);
+        alert.setContentText(text);
         alert.showAndWait();
     }
 	

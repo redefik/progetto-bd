@@ -1,7 +1,12 @@
 package it.uniroma2.dicii.bd.progetto.administration;
 
+import it.uniroma2.dicii.bd.progetto.errorLogic.BatchError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
+import it.uniroma2.dicii.bd.progetto.filament.Filament;
+import it.uniroma2.dicii.bd.progetto.filament.FilamentBean;
+import it.uniroma2.dicii.bd.progetto.repository.FilamentsRepository;
+import it.uniroma2.dicii.bd.progetto.repository.FilamentsRepositoryFactory;
 import it.uniroma2.dicii.bd.progetto.repository.SatellitesRepository;
 import it.uniroma2.dicii.bd.progetto.repository.SatellitesRepositoryFactory;
 import it.uniroma2.dicii.bd.progetto.repository.UsersRepository;
@@ -111,6 +116,22 @@ public class AdministrationSession {
 			SatellitesRepository satellitesRepository = satellitesRepositoryFactory.createSatellitesRepository();
 			satellitesRepository.persistInstrument(instrument, satelliteBean.getName());
 	
+		}
+
+		public void insertFilaments(ArrayList<FilamentBean> filamentBeans) throws ConfigurationError, DataAccessError, BatchError {
+			
+			ArrayList<Filament> filaments = new ArrayList<Filament>();
+			Filament filament;
+			
+			for (FilamentBean filamentBean : filamentBeans) {
+				filament = new Filament(filamentBean);
+				filaments.add(filament);
+			}
+			
+			FilamentsRepositoryFactory filamentsRepositoryFactory = FilamentsRepositoryFactory.getInstance();
+			FilamentsRepository filamentsRepository = filamentsRepositoryFactory.createFilamentsRepository();
+			
+			filamentsRepository.insertAllFilaments(filaments);
 		} 
 			    
 	    

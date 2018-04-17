@@ -21,10 +21,10 @@ private static FilamentsRepositoryFactory instance;
         return instance;
     }
     
-    public FilamentsRepository createSatellitesRepository () throws ConfigurationError{
+    public FilamentsRepository createFilamentsRepository () throws ConfigurationError{
     	
     	try {
-    		// Legge da un file .properties l'implementazione di SatellitesRepository da instanziare
+    		// Legge da un file .properties l'implementazione di FilamentsRepository da instanziare
     		Properties properties = new Properties();
         	properties.load(getClass().getResourceAsStream(CONFIGURATION_FILE));
         	String className = properties.getProperty(FILAMENTSREPOSITORY_TYPE_KEY);
