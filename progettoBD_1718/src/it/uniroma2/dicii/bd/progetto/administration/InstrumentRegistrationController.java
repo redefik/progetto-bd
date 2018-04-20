@@ -40,7 +40,7 @@ public class InstrumentRegistrationController {
 	@FXML 
 	private ComboBox<SatelliteBean> satellite;
 	
-	ArrayList<SatelliteBean> satelliteBeans;
+	private ArrayList<SatelliteBean> satelliteBeans;
 
 	@FXML 
 	public void registerInstrument(){

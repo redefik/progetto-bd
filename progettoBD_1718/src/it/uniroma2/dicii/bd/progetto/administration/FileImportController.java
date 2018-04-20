@@ -10,7 +10,8 @@ import javafx.scene.layout.AnchorPane;
 public class FileImportController {
 	
 	private static final String FILAMENTS_IMPORT_MENU = "../gui/filamentsImportView.fxml";
-
+	private static final String BORDER_POINTS_IMPORT_MENU = "../gui/borderPointsImportView.fxml";
+	
 	@FXML 
 	private AnchorPane window;
 
@@ -37,4 +38,12 @@ public class FileImportController {
 		}
 	}
 
+	public void goToBorderPointsImportView() {
+		try {
+			WindowManager.getInstance().changeMenu(BORDER_POINTS_IMPORT_MENU);
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
 }

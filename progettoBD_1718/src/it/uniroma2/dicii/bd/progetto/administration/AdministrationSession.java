@@ -3,6 +3,8 @@ package it.uniroma2.dicii.bd.progetto.administration;
 import it.uniroma2.dicii.bd.progetto.errorLogic.BatchError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
+import it.uniroma2.dicii.bd.progetto.filament.BorderPoint;
+import it.uniroma2.dicii.bd.progetto.filament.BorderPointBean;
 import it.uniroma2.dicii.bd.progetto.filament.Filament;
 import it.uniroma2.dicii.bd.progetto.filament.FilamentBean;
 import it.uniroma2.dicii.bd.progetto.repository.FilamentsRepository;
@@ -133,6 +135,22 @@ public class AdministrationSession {
 			FilamentsRepository filamentsRepository = filamentsRepositoryFactory.createFilamentsRepository();
 			
 			filamentsRepository.insertAllFilaments(filaments);
+		}
+
+		public void insertBorderPoints(ArrayList<BorderPointBean> borderPointBeans) throws ConfigurationError, DataAccessError, BatchError {
+			
+			ArrayList<BorderPoint> borderPoints = new ArrayList<BorderPoint>();
+			BorderPoint borderPoint;
+			
+			for (BorderPointBean borderPointBean : borderPointBeans) {
+				borderPoint = new BorderPoint(borderPointBean);
+				borderPoints.add(borderPoint);
+			}
+			
+			FilamentsRepositoryFactory filamentsRepositoryFactory = FilamentsRepositoryFactory.getInstance();
+			FilamentsRepository filamentsRepository = filamentsRepositoryFactory.createFilamentsRepository();
+			
+			filamentsRepository.insertAllBorderPoints(borderPoints);
 		} 
 			    
 	    

@@ -14,5 +14,10 @@
          <font>
             <Font size="14.0" />
          </font></Button>
+      <Button layoutX="41.0" layoutY="167.0" mnemonicParsing="false" onAction="#goToBorderPointsImportView" prefHeight="56.0" prefWidth="519.0" text="Importa Punti del contorno">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
