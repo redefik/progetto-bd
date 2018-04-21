@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="window" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.dicii.bd.progetto.administration.SegmentPointsImportController">
+   <children>
+      <ComboBox fx:id="cBoxSatellites" layoutX="413.0" layoutY="76.0" prefWidth="150.0" />
+      <Label layoutX="52.0" layoutY="81.0" prefHeight="21.0" prefWidth="321.0" text="Seleziona il satellite che ha fatto le misurazioni:" />
+      <TextField fx:id="importedFilePath" editable="false" layoutX="52.0" layoutY="180.0" prefHeight="31.0" prefWidth="373.0" />
+      <Label layoutX="170.0" layoutY="136.0" text="Seleziona il file dei punti da importare:" />
+      <Button layoutX="438.0" layoutY="180.0" mnemonicParsing="false" onAction="#selectFile" prefHeight="31.0" prefWidth="125.0" text="Seleziona il file" />
+      <Button layoutX="52.0" layoutY="26.0" mnemonicParsing="false" onAction="#gotoPreviousMenu" text="Indietro" />
+      <Button layoutX="261.0" layoutY="259.0" mnemonicParsing="false" onAction="#betterImportFile" text="Importa" />
+      <Label fx:id="errorMessage" layoutX="52.0" layoutY="345.0" prefHeight="21.0" prefWidth="513.0" textFill="RED" />
+      <ProgressIndicator fx:id="progressIndicator" layoutX="93.0" layoutY="249.0" progress="0.0" />
+   </children>
+</AnchorPane>

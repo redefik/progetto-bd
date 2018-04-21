@@ -8,6 +8,7 @@ import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
 import it.uniroma2.dicii.bd.progetto.filament.BorderPointBean;
 import it.uniroma2.dicii.bd.progetto.filament.FilamentBean;
+import it.uniroma2.dicii.bd.progetto.filament.SegmentPointImported;
 import it.uniroma2.dicii.bd.progetto.satellite.SatelliteBean;
 
 public abstract class CSVFileParser {
@@ -18,9 +19,15 @@ public abstract class CSVFileParser {
 	
 	//Si specifica l'header che tutti i file csv contenenti punti del contorno devono rispettare
 	protected String[] BORDER_POINTS_FILE_HEADERS = {"IDFIL", "GLON_CONT", "GLAT_CONT"};
+	
+	protected String[] SEGMENT_POINTS_FILE_HEADER = {"IDFIL", "IDBRANCH", "TYPE", "GLON_BR", "GLAT_BR", "N", "FLUX"};
+
 
 	public abstract ArrayList<FilamentBean> getFilamentBeans(File importedFile) throws CSVFileParserException;
 	
 	public abstract ArrayList<BorderPointBean> getBorderPointBeans(File importedFile, SatelliteBean satelliteBean) 
 			throws CSVFileParserException, ConfigurationError, DataAccessError;
+	
+	public abstract ArrayList<SegmentPointImported> getSegmentPoints(File importedFile) throws CSVFileParserException;
+
 }

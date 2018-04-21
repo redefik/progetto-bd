@@ -2,72 +2,73 @@ package it.uniroma2.dicii.bd.progetto.administration;
 
 import java.io.File;
 import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
+
 import it.uniroma2.dicii.bd.progetto.errorLogic.BatchError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.CSVFileParserException;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ErrorType;
 import it.uniroma2.dicii.bd.progetto.errorLogic.GUIError;
-import it.uniroma2.dicii.bd.progetto.filament.FilamentBean;
+import it.uniroma2.dicii.bd.progetto.filament.SegmentPointImported;
 import it.uniroma2.dicii.bd.progetto.gui.WindowManager;
+import it.uniroma2.dicii.bd.progetto.satellite.SatelliteBean;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.ProgressIndicator;
 
-public class FilamentsImportController {
+public class SegmentPointsImportController {
 	
 	private static final String IMPORT_FILE_FORMAT_NAME = "csv";
 	private static final String IMPORT_FILE_FORMAT_EXTENSION = "*.csv";
 	private static final String NOT_SELECTED_FILE_MESSAGE = "Seleziona prima un file da importare.";
 	private static final String IMPORT_FAILED = "Import del file non riuscito.";
 	private static final String TASK_IS_RUNNING = "Attendere il completamento dell'operazione";
-
-	@FXML 
-	private AnchorPane window;
+	
+	@FXML
+	private ComboBox<SatelliteBean> cBoxSatellites;
 	@FXML
 	private TextField importedFilePath;
-	@FXML 
+	@FXML
 	private Label errorMessage;
 	@FXML
+	private AnchorPane window;
+	@FXML 
 	private ProgressIndicator progressIndicator;
 	
 	private File importedFile;
+	private ArrayList<SatelliteBean> satelliteBeans;
+	private SatelliteBean selectedSatellite;
+	// l'attributo serve ad evitare che durante l'import l'utente interagisca in modo unsafe con l'interfaccia
 	private boolean isTaskRunning;
 	
-	@FXML
-	public void initialize() {
-		progressIndicator.setVisible(false);
-		isTaskRunning = false;
-		WindowManager.getInstance().setWindow(window);
-	}
-	
-	private class FilamentsImportTask extends Task<Void> {
-
+	// il task svolge l'import del file su un thread separato per evitare un comportamento unresponsive da parte della GUI  
+	private class SegmentPointsImportTask extends Task<Void> {
+		
 		@Override
 		protected Void call() throws ConfigurationError, CSVFileParserException, DataAccessError, BatchError {
+		
 			isTaskRunning = true;
-			updateProgress(-1, 1);
-			// Si instanzia mediante l'uso di una factory un parser per il file da importare
+			updateProgress(-1, 1); // si aziona l'indicatore di caricamento
 			CSVFileParserFactory parserFactory = CSVFileParserFactory.getInstance();
-			CSVFileParser parser = parserFactory.createCSVFileParser();
-						
-			//Si delega a un oggetto di tipo CSVFileParser il parser del file per ottenere una lista di FilamentBean
-			ArrayList<FilamentBean> filamentBeans = parser.getFilamentBeans(importedFile);
-						
-			//Si delega alla classe AdministrationSession l'inserimento dei filamenti in persistenza
+			CSVFileParser fileParser = parserFactory.createCSVFileParser();
+			ArrayList<SegmentPointImported> segmentPoints = fileParser.getSegmentPoints(importedFile);
 			AdministrationSession administrationSession = AdministrationSession.getInstance();
-			administrationSession.insertFilaments(filamentBeans);
-			updateProgress(1, 1);
+			administrationSession.insertSegmentPoints(segmentPoints, selectedSatellite);
+			updateProgress(1, 1); // l'indicatore di caricamento segnalera' il completamento dell'operazione
 			isTaskRunning = false;
 			return null;
+			
 		}
-		
 	}
 	
 	// il listener intercetta le eccezioni eventualmente sollevate dal task
@@ -76,23 +77,58 @@ public class FilamentsImportController {
 		@Override
 		public void changed(ObservableValue<? extends Throwable> observable, Throwable oldValue, Throwable exception) {
 			if(exception != null) {
-				isTaskRunning = false;
-				progressIndicator.setVisible(false);
-				Logger.getLogger(getClass()).error(exception.getMessage(), exception);
-				if (exception instanceof ConfigurationError) {
-					WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
-				} else if (exception instanceof CSVFileParserException) {
-					WindowManager.getInstance().openErrorWindow(ErrorType.CSVFILE_PARSING);
-				} else if (exception instanceof DataAccessError) {
-					WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
-				} else if (exception instanceof BatchError) {
-					WindowManager.getInstance().openDetailedErrorWindow(IMPORT_FAILED, exception.getMessage());
-				}
+				 isTaskRunning = false;
+				 progressIndicator.setVisible(false);
+				 Logger.getLogger(getClass()).error(exception.getMessage(), exception);
+				 if (exception instanceof ConfigurationError) {
+					 WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
+				 } else if (exception instanceof CSVFileParserException) {
+					 WindowManager.getInstance().openErrorWindow(ErrorType.CSVFILE_PARSING);
+				 } else if (exception instanceof DataAccessError) {
+					 WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
+				 } else if (exception instanceof BatchError) {
+					 WindowManager.getInstance().openDetailedErrorWindow(IMPORT_FAILED, exception.getMessage());
+				 }
 			}		
 		}
 	}
-
-
+	
+	
+	@FXML
+	public void initialize() {
+		try {
+			isTaskRunning = false;
+			progressIndicator.setVisible(false);
+			WindowManager.getInstance().setWindow(window);
+			ObservableList<SatelliteBean> observableSatelliteBeans;
+	        satelliteBeans = new ArrayList<>();
+	        satelliteBeans = AdministrationSession.getInstance().findAllSatellites();
+	        observableSatelliteBeans = FXCollections.observableArrayList(satelliteBeans);
+	        cBoxSatellites.setItems(observableSatelliteBeans);
+	        cBoxSatellites.setValue(satelliteBeans.get(0));
+	        
+		} catch (DataAccessError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
+		} catch (ConfigurationError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
+		}
+	}
+	
+	public void gotoPreviousMenu() {
+		if (isTaskRunning) {
+			WindowManager.getInstance().openInfoWindow(TASK_IS_RUNNING);
+			return;
+		}
+		try {
+			WindowManager.getInstance().goToPreviousMenu();
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
+	
 	public void selectFile() {
 		if (isTaskRunning) {
 			WindowManager.getInstance().openInfoWindow(TASK_IS_RUNNING);
@@ -113,14 +149,15 @@ public class FilamentsImportController {
 			WindowManager.getInstance().openInfoWindow(TASK_IS_RUNNING);
 			return;
 		}
-		// Se l'utente non ha specificato un file da importare si stampa un messaggio di errore
+		
 		if (importedFile == null) {
 			errorMessage.setText(NOT_SELECTED_FILE_MESSAGE);
 			return;
 		}
 		progressIndicator.setVisible(true);
+		selectedSatellite = cBoxSatellites.getSelectionModel().getSelectedItem();
 		// l'operazione, che risulta costosa, viene collocata su un thread separato da quello responsabile del disegno della GUI
-		FilamentsImportTask task = new FilamentsImportTask();
+		SegmentPointsImportTask task = new SegmentPointsImportTask();
 		// si pone il ProgressIndicator in ascolto degli aggiornamenti provenienti dal task relativi all'avanzamento dell'operazione
 		progressIndicator.progressProperty().bind(task.progressProperty());
 		ExceptionListener exceptionListener = new ExceptionListener();
@@ -130,42 +167,28 @@ public class FilamentsImportController {
 		taskThread.setDaemon(true);
 		taskThread.start();
 	}
-	
-	public void gotoPreviousMenu() {
-		if (isTaskRunning) {
-			WindowManager.getInstance().openInfoWindow(TASK_IS_RUNNING);
-			return;
-		}
+/*
+	// questo metodo innesca le stesse operazioni innescate da betterImportFile ma senza svincolarle dal thread che gestisce la GUI
+	public void importFile() {
 		try {
-			WindowManager.getInstance().goToPreviousMenu();
-		} catch (GUIError e) {
-			Logger.getLogger(getClass()).error(e.getMessage(), e);
-			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
-		}
-	}
-
-	/*public void importFile() {
-		try {
-			// Se l'utente non ha specificato un file da importare si stampa un messaggio di errore
+			SatelliteBean selectedSatellite = cBoxSatellites.getSelectionModel().getSelectedItem();
 			if (importedFile == null) {
 				errorMessage.setText(NOT_SELECTED_FILE_MESSAGE);
 				return;
 			}
-			// Si instanzia mediante l'uso di una factory un parser per il file da importare
+						
 			CSVFileParserFactory parserFactory = CSVFileParserFactory.getInstance();
-			CSVFileParser parser = parserFactory.createCSVFileParser();
+			CSVFileParser fileParser = parserFactory.createCSVFileParser();
 			
-			//Si delega a un oggetto di tipo CSVFileParser il parser del file per ottenere una lista di FilamentBean
-			ArrayList<FilamentBean> filamentBeans = parser.getFilamentBeans(importedFile);
 			
-			//Si delega alla classe AdministrationSession l'inserimento dei filamenti in persistenza
+			ArrayList<SegmentPointImported> segmentPoints = fileParser.getSegmentPoints(importedFile);
+			
 			AdministrationSession administrationSession = AdministrationSession.getInstance();
-			administrationSession.insertFilaments(filamentBeans);
-			
+			administrationSession.insertSegmentPoints(segmentPoints, selectedSatellite);
 			WindowManager.getInstance().openInfoWindow(IMPORT_SUCCESS);
 			WindowManager.getInstance().changeMenu(ADMINISTRATION_MENU);
 			
-		} catch(ConfigurationError e) {
+		} catch (ConfigurationError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
 		} catch(CSVFileParserException e) {
@@ -174,11 +197,12 @@ public class FilamentsImportController {
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
-		} catch (BatchError e) {
-			WindowManager.getInstance().openDetailedErrorWindow(IMPORT_FAILED, e.getMessage());
 		} catch (DataAccessError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
+		} catch (BatchError e) {
+			WindowManager.getInstance().openDetailedErrorWindow(IMPORT_FAILED, e.getMessage());
 		}
-	}*/
+	}
+*/	
 }

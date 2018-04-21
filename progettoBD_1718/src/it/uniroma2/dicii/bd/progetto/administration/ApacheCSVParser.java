@@ -15,6 +15,7 @@ import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
 import it.uniroma2.dicii.bd.progetto.filament.BorderPointBean;
 import it.uniroma2.dicii.bd.progetto.filament.FilamentBean;
+import it.uniroma2.dicii.bd.progetto.filament.SegmentPointImported;
 import it.uniroma2.dicii.bd.progetto.repository.FilamentsRepository;
 import it.uniroma2.dicii.bd.progetto.repository.FilamentsRepositoryFactory;
 import it.uniroma2.dicii.bd.progetto.satellite.InstrumentBean;
@@ -170,6 +171,54 @@ public class ApacheCSVParser extends CSVFileParser{
 				}
 			}
 			
+			if (fileReader != null) {
+				try {
+					fileReader.close();
+				} catch (IOException e) {
+					throw new CSVFileParserException(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+	
+	
+	@Override
+	public ArrayList<SegmentPointImported> getSegmentPoints(File importedFile) throws CSVFileParserException {
+		CSVParser csvFileParser = null;
+		FileReader fileReader = null;
+		try {
+			CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader(super.SEGMENT_POINTS_FILE_HEADER);
+			fileReader = new FileReader(importedFile);
+			
+			csvFileParser = new CSVParser(fileReader, csvFileFormat);
+			
+			List<CSVRecord> csvRecords = csvFileParser.getRecords();
+			ArrayList<SegmentPointImported> segmentPoints = new ArrayList<>();
+			
+			for (int i = 1; i < csvRecords.size(); ++i) {
+				CSVRecord record = (CSVRecord)csvRecords.get(i);
+				SegmentPointImported segmentPoint = new SegmentPointImported();
+				segmentPoint.setFilamentId(Integer.parseInt(record.get("IDFIL")));
+				segmentPoint.setSegmentId(Integer.parseInt(record.get("IDBRANCH")));
+				segmentPoint.setType((char) record.get("TYPE").getBytes()[0]);
+				segmentPoint.setLongitude(Double.parseDouble(record.get("GLON_BR")));
+				segmentPoint.setLatitude(Double.parseDouble(record.get("GLAT_BR")));
+				segmentPoint.setProgNumber(Integer.parseInt(record.get("N")));
+				segmentPoints.add(segmentPoint);
+			}
+			return segmentPoints;
+		} catch (IOException | IllegalArgumentException e) {
+			throw new CSVFileParserException(e.getMessage(), e.getCause());
+		} finally {
+			//Terminato il parsing del file, viene rilasciato il parser
+			if (csvFileParser != null) {
+				try {
+					csvFileParser.close();
+				} catch (IOException e) {
+					throw new CSVFileParserException(e.getMessage(), e.getCause());
+				}
+			}
+			//Terminato il parsing del file, viene chiuso il canale in lettura con esso
 			if (fileReader != null) {
 				try {
 					fileReader.close();

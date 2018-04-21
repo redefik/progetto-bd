@@ -7,6 +7,7 @@ import it.uniroma2.dicii.bd.progetto.filament.BorderPoint;
 import it.uniroma2.dicii.bd.progetto.filament.BorderPointBean;
 import it.uniroma2.dicii.bd.progetto.filament.Filament;
 import it.uniroma2.dicii.bd.progetto.filament.FilamentBean;
+import it.uniroma2.dicii.bd.progetto.filament.SegmentPointImported;
 import it.uniroma2.dicii.bd.progetto.repository.FilamentsRepository;
 import it.uniroma2.dicii.bd.progetto.repository.FilamentsRepositoryFactory;
 import it.uniroma2.dicii.bd.progetto.repository.SatellitesRepository;
@@ -151,6 +152,16 @@ public class AdministrationSession {
 			FilamentsRepository filamentsRepository = filamentsRepositoryFactory.createFilamentsRepository();
 			
 			filamentsRepository.insertAllBorderPoints(borderPoints);
+		}
+		
+		public void insertSegmentPoints(ArrayList<SegmentPointImported> segmentPoints, SatelliteBean selectedSatellite) 
+				throws ConfigurationError, DataAccessError, BatchError {
+		
+			FilamentsRepositoryFactory filamentsRepositoryFactory = FilamentsRepositoryFactory.getInstance();
+			FilamentsRepository filamentsRepository = filamentsRepositoryFactory.createFilamentsRepository();
+			
+			filamentsRepository.insertAllSegmentPoints(segmentPoints, selectedSatellite.getName());
+			
 		} 
 			    
 	    

@@ -17,6 +17,9 @@ public class Filament {
 		this.instrumentName = filamentBean.getInstrumentName();
 	}
 	
+	public Filament() {
+	}
+
 	public String getName() {
 		return name;
 	}
