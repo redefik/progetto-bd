@@ -87,7 +87,7 @@ public class SegmentPointsImportController {
 				 } else if (exception instanceof DataAccessError) {
 					 WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
 				 } else if (exception instanceof BatchError) {
-					 WindowManager.getInstance().openDetailedErrorWindow(IMPORT_FAILED, exception.getMessage());
+					 WindowManager.getInstance().openDetailedErrorWindow(IMPORT_FAILED, (Exception)exception);
 				 }
 			}		
 		}

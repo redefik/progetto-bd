@@ -20,6 +20,7 @@ import it.uniroma2.dicii.bd.progetto.repository.FilamentsRepository;
 import it.uniroma2.dicii.bd.progetto.repository.FilamentsRepositoryFactory;
 import it.uniroma2.dicii.bd.progetto.satellite.InstrumentBean;
 import it.uniroma2.dicii.bd.progetto.satellite.SatelliteBean;
+import it.uniroma2.dicii.bd.progetto.star.StarBean;
 
 public class ApacheCSVParser extends CSVFileParser{
 	
@@ -187,6 +188,8 @@ public class ApacheCSVParser extends CSVFileParser{
 		CSVParser csvFileParser = null;
 		FileReader fileReader = null;
 		try {
+			
+			//Si specifica il formato che le righe del file csv devono rispettare e il file da parsare
 			CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader(super.SEGMENT_POINTS_FILE_HEADER);
 			fileReader = new FileReader(importedFile);
 			
@@ -195,6 +198,7 @@ public class ApacheCSVParser extends CSVFileParser{
 			List<CSVRecord> csvRecords = csvFileParser.getRecords();
 			ArrayList<SegmentPointImported> segmentPoints = new ArrayList<>();
 			
+			// Nota: nel ciclo viene saltata la riga contenente gli header
 			for (int i = 1; i < csvRecords.size(); ++i) {
 				CSVRecord record = (CSVRecord)csvRecords.get(i);
 				SegmentPointImported segmentPoint = new SegmentPointImported();
@@ -207,6 +211,58 @@ public class ApacheCSVParser extends CSVFileParser{
 				segmentPoints.add(segmentPoint);
 			}
 			return segmentPoints;
+		} catch (IOException | IllegalArgumentException e) {
+			throw new CSVFileParserException(e.getMessage(), e.getCause());
+		} finally {
+			//Terminato il parsing del file, viene rilasciato il parser
+			if (csvFileParser != null) {
+				try {
+					csvFileParser.close();
+				} catch (IOException e) {
+					throw new CSVFileParserException(e.getMessage(), e.getCause());
+				}
+			}
+			//Terminato il parsing del file, viene chiuso il canale in lettura con esso
+			if (fileReader != null) {
+				try {
+					fileReader.close();
+				} catch (IOException e) {
+					throw new CSVFileParserException(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+	
+	@Override
+	public ArrayList<StarBean> getStarBeans(File importedFile, String satelliteName) throws CSVFileParserException {
+		CSVParser csvFileParser = null;
+		FileReader fileReader = null;
+		try {	
+			//Si specifica il formato che le righe del file csv devono rispettare e il file da parsare
+			CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader(super.STARS_FILE_HEADERS);
+			fileReader = new FileReader(importedFile);
+			
+			csvFileParser = new CSVParser(fileReader, csvFileFormat);
+			
+			//Per ogni oggetto di tipo CSVRecord ottenuto dal parsing si crea un oggetto di tipo StarBean
+			List<CSVRecord> csvRecords = csvFileParser.getRecords();
+			ArrayList<StarBean> starBeans = new ArrayList<>();
+			
+			// Nota: nel ciclo viene saltata la riga contenente gli header
+			for (int i = 1; i < csvRecords.size(); ++i) {
+				CSVRecord record = (CSVRecord)csvRecords.get(i);
+				StarBean starBean = new StarBean();
+				starBean.setName(record.get("NAME"));
+				starBean.setId(Integer.parseInt(record.get("IDSTAR")));
+				starBean.setLatitude(Double.parseDouble(record.get("LAT")));
+				starBean.setLongitude(Double.parseDouble(record.get("LONG")));	
+				starBean.setFlow(Double.parseDouble(record.get("FLOW")));
+				starBean.setClassification(record.get("TYPE"));;
+				starBean.setSatellite(satelliteName);
+				starBeans.add(starBean);
+			}
+			return starBeans;
+			
 		} catch (IOException | IllegalArgumentException e) {
 			throw new CSVFileParserException(e.getMessage(), e.getCause());
 		} finally {

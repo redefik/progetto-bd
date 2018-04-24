@@ -19,9 +19,14 @@
             <Font size="16.0" />
          </font>
       </Button>
-      <Button layoutX="41.0" layoutY="244.0" mnemonicParsing="false" onAction="#goToSegmentPointsImportView" prefHeight="56.0" prefWidth="519.0" text="Importa Punti Segmenti">
+      <Button layoutX="41.0" layoutY="244.0" mnemonicParsing="false" onAction="#goToSegmentPointsImportView" prefHeight="56.0" prefWidth="519.0" text="Importa Punti del Segmento">
          <font>
             <Font size="16.0" />
          </font></Button>
+      <Button layoutX="41.0" layoutY="322.0" mnemonicParsing="false" onAction="#goToStarsImportView" prefHeight="56.0" prefWidth="519.0" text="Importa Stelle">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

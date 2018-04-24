@@ -21,6 +21,10 @@ public class MainController {
 	private static final String PERMISSION_DENIED = "Accesso negato. Non disponi delle autorizzazioni necessarie\n"
 			+ "per accedere all'area riservata all'amministrazione.";
 	private static final String ADMINISTRATION_MENU = "../gui/administrationView.fxml";
+	private static final String SEARCH_FILAMENT_MENU = "../gui/searchFilamentView.fxml";
+	private static final String SEARCH_STAR_MENU = "../gui/searchStarView.fxml";
+	private static final String CALCULATE_SB_DISTANCE_MENU = "../gui/calculateSBDistanceView.fxml";
+	private static final String CALCULATE_SF_DISTANCE_MENU = "../gui/calculateSFDistanceView.fxml";
 	
 	private static UserBean user;
 	
@@ -42,6 +46,42 @@ public class MainController {
 			} else {
 				WindowManager.getInstance().openInfoWindow(PERMISSION_DENIED);
 			}
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
+
+	public void goToSearchFilament() {
+		try {
+			WindowManager.getInstance().changeMenu(SEARCH_FILAMENT_MENU);
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
+
+	public void goToSearchStar() {
+		try {
+			WindowManager.getInstance().changeMenu(SEARCH_STAR_MENU);
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
+
+	public void goToCalculateSBDistance() {
+		try {
+			WindowManager.getInstance().changeMenu(CALCULATE_SB_DISTANCE_MENU);
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
+
+	public void goToCalculateSFDistance() {
+		try {
+			WindowManager.getInstance().changeMenu(CALCULATE_SF_DISTANCE_MENU);
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);

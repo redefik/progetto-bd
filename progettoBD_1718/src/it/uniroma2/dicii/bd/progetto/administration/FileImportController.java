@@ -12,7 +12,7 @@ public class FileImportController {
 	private static final String FILAMENTS_IMPORT_MENU = "../gui/filamentsImportView.fxml";
 	private static final String BORDER_POINTS_IMPORT_MENU = "../gui/borderPointsImportView.fxml";
 	private static final String SEGMENT_POINTS_IMPORT_MENU = "../gui/segmentPointsImportView.fxml";
-	
+	private static final String STARS_IMPORT_MENU = "../gui/starsImportView.fxml";
 	@FXML 
 	private AnchorPane window;
 
@@ -51,6 +51,15 @@ public class FileImportController {
 	public void goToSegmentPointsImportView() {
 		try {
 			WindowManager.getInstance().changeMenu(SEGMENT_POINTS_IMPORT_MENU);
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
+
+	public void goToStarsImportView() {
+		try {
+			WindowManager.getInstance().changeMenu(STARS_IMPORT_MENU);
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);

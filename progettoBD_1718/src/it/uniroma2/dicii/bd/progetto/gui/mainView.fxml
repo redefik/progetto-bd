@@ -17,5 +17,25 @@
             <Font size="14.0" />
          </font>
       </Label>
+      <Button layoutX="45.0" layoutY="111.0" mnemonicParsing="false" onAction="#goToSearchFilament" prefHeight="60.0" prefWidth="510.0" text="Ricerca Filamento(5,6,7,8)">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button layoutX="45.0" layoutY="192.0" mnemonicParsing="false" onAction="#goToSearchStar" prefHeight="60.0" prefWidth="510.0" text="Ricerca Stelle(9,10)">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button layoutX="45.0" layoutY="270.0" mnemonicParsing="false" onAction="#goToCalculateSBDistance" prefHeight="60.0" prefWidth="510.0" text="Calcolo distanza segmento-contorno(11)">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button layoutX="45.0" layoutY="352.0" mnemonicParsing="false" onAction="#goToCalculateSFDistance" prefHeight="60.0" prefWidth="510.0" text="Calcolo distanza stella-filamento(12)">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

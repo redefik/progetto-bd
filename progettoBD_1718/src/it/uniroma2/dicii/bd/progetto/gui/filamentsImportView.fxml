@@ -13,7 +13,7 @@
          <font>
             <Font size="14.0" />
          </font></Button>
-      <Button layoutX="230.0" layoutY="187.0" mnemonicParsing="false" onAction="#betterImportFile" prefHeight="43.0" prefWidth="140.0" text="Importa">
+      <Button layoutX="124.0" layoutY="205.0" mnemonicParsing="false" onAction="#betterImportFile" prefHeight="43.0" prefWidth="140.0" text="Importa">
          <font>
             <Font size="14.0" />
          </font></Button>
@@ -28,6 +28,6 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <ProgressIndicator fx:id="progressIndicator" layoutX="67.0" layoutY="187.0" progress="0.0" />
+      <ProgressIndicator fx:id="progressIndicator" layoutX="357.0" layoutY="207.0" progress="0.0" />
    </children>
 </AnchorPane>

@@ -12,6 +12,8 @@ import it.uniroma2.dicii.bd.progetto.repository.FilamentsRepository;
 import it.uniroma2.dicii.bd.progetto.repository.FilamentsRepositoryFactory;
 import it.uniroma2.dicii.bd.progetto.repository.SatellitesRepository;
 import it.uniroma2.dicii.bd.progetto.repository.SatellitesRepositoryFactory;
+import it.uniroma2.dicii.bd.progetto.repository.StarsRepository;
+import it.uniroma2.dicii.bd.progetto.repository.StarsRepositoryFactory;
 import it.uniroma2.dicii.bd.progetto.repository.UsersRepository;
 import it.uniroma2.dicii.bd.progetto.repository.UsersRepositoryFactory;
 import it.uniroma2.dicii.bd.progetto.satellite.Agency;
@@ -21,6 +23,8 @@ import it.uniroma2.dicii.bd.progetto.satellite.InstrumentBean;
 import it.uniroma2.dicii.bd.progetto.satellite.Satellite;
 import it.uniroma2.dicii.bd.progetto.satellite.SatelliteBean;
 import it.uniroma2.dicii.bd.progetto.satellite.SelectableAgencyBean;
+import it.uniroma2.dicii.bd.progetto.star.Star;
+import it.uniroma2.dicii.bd.progetto.star.StarBean;
 import it.uniroma2.dicii.bd.progetto.user.User;
 import it.uniroma2.dicii.bd.progetto.user.UserBean;
 import java.util.ArrayList;
@@ -138,6 +142,7 @@ public class AdministrationSession {
 			filamentsRepository.insertAllFilaments(filaments);
 		}
 
+		// Il metodo delega a un oggetto filamentsRepository l'inserimento di una lista di punti del contorno in persistenza
 		public void insertBorderPoints(ArrayList<BorderPointBean> borderPointBeans) throws ConfigurationError, DataAccessError, BatchError {
 			
 			ArrayList<BorderPoint> borderPoints = new ArrayList<BorderPoint>();
@@ -154,6 +159,7 @@ public class AdministrationSession {
 			filamentsRepository.insertAllBorderPoints(borderPoints);
 		}
 		
+		// Il metodo delega a un oggetto filamentsRepository l'inserimento di una lista di punti del segmento in persistenza
 		public void insertSegmentPoints(ArrayList<SegmentPointImported> segmentPoints, SatelliteBean selectedSatellite) 
 				throws ConfigurationError, DataAccessError, BatchError {
 		
@@ -163,7 +169,22 @@ public class AdministrationSession {
 			filamentsRepository.insertAllSegmentPoints(segmentPoints, selectedSatellite.getName());
 			
 		} 
-			    
-	    
+		
+		// Il metodo delega a un oggetto starsRepository l'inserimento di una lista di stelle in persistenza
+		public void insertStars(ArrayList<StarBean> starBeans) throws ConfigurationError, DataAccessError, BatchError {
+			
+			ArrayList<Star> stars = new ArrayList<Star>();
+			Star star;
+			
+			for (StarBean starBean : starBeans) {
+				star = new Star(starBean);
+				stars.add(star);
+			}
+			
+			StarsRepositoryFactory starsRepositoryFactory = StarsRepositoryFactory.getInstance();
+			StarsRepository starsRepository = starsRepositoryFactory.createStarsRepository();
+			
+			starsRepository.insertAllStars(stars);
+		}
 	    
 }

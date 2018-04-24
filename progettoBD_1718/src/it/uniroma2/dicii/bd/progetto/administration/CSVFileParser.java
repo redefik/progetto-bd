@@ -10,8 +10,13 @@ import it.uniroma2.dicii.bd.progetto.filament.BorderPointBean;
 import it.uniroma2.dicii.bd.progetto.filament.FilamentBean;
 import it.uniroma2.dicii.bd.progetto.filament.SegmentPointImported;
 import it.uniroma2.dicii.bd.progetto.satellite.SatelliteBean;
+import it.uniroma2.dicii.bd.progetto.star.StarBean;
 
 public abstract class CSVFileParser {
+	
+	//Si specifica l'header che tutti i file csv contenenti stelle devono rispettare
+	protected String[] STARS_FILE_HEADERS = 
+		{"IDSTAR", "NAME", "LONG", "LAT", "FLOW", "TYPE"};
 	
 	//Si specifica l'header che tutti i file csv contenenti filamenti devono rispettare
 	protected String[] FILAMENTS_FILE_HEADERS = 
@@ -20,6 +25,7 @@ public abstract class CSVFileParser {
 	//Si specifica l'header che tutti i file csv contenenti punti del contorno devono rispettare
 	protected String[] BORDER_POINTS_FILE_HEADERS = {"IDFIL", "GLON_CONT", "GLAT_CONT"};
 	
+	//Si specifica l'header che tutti i file csv contenenti punti del segmento devono rispettare
 	protected String[] SEGMENT_POINTS_FILE_HEADER = {"IDFIL", "IDBRANCH", "TYPE", "GLON_BR", "GLAT_BR", "N", "FLUX"};
 
 
@@ -29,5 +35,7 @@ public abstract class CSVFileParser {
 			throws CSVFileParserException, ConfigurationError, DataAccessError;
 	
 	public abstract ArrayList<SegmentPointImported> getSegmentPoints(File importedFile) throws CSVFileParserException;
+	
+	public abstract ArrayList<StarBean> getStarBeans(File importedFile, String satelliteName) throws CSVFileParserException;
 
 }

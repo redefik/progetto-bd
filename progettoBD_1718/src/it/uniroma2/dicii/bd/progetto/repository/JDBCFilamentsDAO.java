@@ -234,8 +234,8 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 	}
 	
 	
-	private ArrayList<SegmentPoint> getValidSegmentPoints(ArrayList<SegmentPointImported> importedPoints, String selectedSatellite) 
-			throws ConfigurationError, DataAccessError {
+	private ArrayList<SegmentPoint> getValidSegmentPoints(ArrayList<SegmentPointImported> importedPoints, 
+			String selectedSatellite) throws ConfigurationError, DataAccessError {
 		Connection connection = null;
 		JDBCConnectionPool jdbcConnectionPool = null;
 		
@@ -266,9 +266,6 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 						filament.setNumberOfSegments(rs.getInt(5));
 						filament.setInstrumentName(rs.getString(6));
 						filIdfilMap.put(filamentId, filament);
-						
-//						filamentName = rs.getString(1);
-//						filIdfilNameMap.put(filamentId, filamentName);
 					}
 				}
 				// i punti che fanno riferimento a filamenti presenti nel db vengono ignorati
@@ -337,12 +334,12 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 				queryBuilder.append(",'" + String.valueOf(point.getType()) + "')");
 				statement.addBatch(queryBuilder.toString());
 				// contestualmente, si aggiorna il numero di segmenti del filamento a cui appartiene il punto
-				FilamentWithSegments f = filamentSegmentsMap.get(filamentName);
-				if (f == null) { // se il filamento non e' ancora presente nella mappa lo si aggiunge
-					f = new FilamentWithSegments(filamentName, filamentCurrentNumberOfSegments);
+				FilamentWithSegments filamentWithSegments = filamentSegmentsMap.get(filamentName);
+				if (filamentWithSegments == null) { // se il filamento non e' ancora presente nella mappa lo si aggiunge
+					filamentWithSegments = new FilamentWithSegments(filamentName, filamentCurrentNumberOfSegments);
 				}
-				f.updateSegments(segmentId);
-				filamentSegmentsMap.put(filamentName, f);
+				filamentWithSegments.updateSegments(segmentId);
+				filamentSegmentsMap.put(filamentName, filamentWithSegments);
 			}
 			
 			// si aggiorna il valore dell'attributo NumeroSegmenti per tutti i filamenti coinvolti nell'inserimento dei punti

@@ -94,7 +94,7 @@ public class BorderPointsImportController {
 				} else if (exception instanceof DataAccessError) {
 					WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
 				} else if (exception instanceof BatchError) {
-					WindowManager.getInstance().openDetailedErrorWindow(IMPORT_FAILED, exception.getMessage());
+					WindowManager.getInstance().openDetailedErrorWindow(IMPORT_FAILED, (Exception)exception);
 				}
 			}		
 		}
@@ -211,7 +211,7 @@ public class BorderPointsImportController {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
 		} catch (BatchError e) {
-			WindowManager.getInstance().openDetailedErrorWindow(IMPORT_FAILED, e.getMessage());
+			WindowManager.getInstance().openDetailedErrorWindow(IMPORT_FAILED, e);
 		} catch (DataAccessError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
