@@ -143,4 +143,15 @@ public class WindowManager {
 		File selectedFile = fileChooser.showOpenDialog(null);
 		return selectedFile;
 	}
+	
+	public void openWindow(String newWindow) throws GUIError {
+		try {
+			Stage newStage = new Stage();
+			Parent root = FXMLLoader.load(getClass().getResource(newWindow));
+			newStage.setScene(new Scene(root));
+			newStage.show();
+		} catch (IOException | NullPointerException e) {
+			throw new GUIError(e.getMessage(), e.getCause());
+		}
+	}
 }

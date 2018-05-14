@@ -1,8 +1,30 @@
-2018-04-24 09:52:54 ERROR [it.uniroma2.dicii.bd.progetto.entry.MainController:77] - Location is required.
-it.uniroma2.dicii.bd.progetto.errorLogic.GUIError: Location is required.
-	at it.uniroma2.dicii.bd.progetto.gui.WindowManager.openMenu(WindowManager.java:65)
+2018-05-14 11:38:32 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByNameIdController:156] - ERRORE: errore di sintassi alla fine dell'input
+  Posizione: 44
+it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError: ERRORE: errore di sintassi alla fine dell'input
+  Posizione: 44
+	at it.uniroma2.dicii.bd.progetto.repository.JDBCSatelliteDAO.findAllInstruments(JDBCSatelliteDAO.java:322)
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.findAllInstruments(StandardUserSession.java:217)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByNameIdController.initialize(SearchFilamentByNameIdController.java:151)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.Trampoline.invoke(Unknown Source)
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.MethodUtil.invoke(Unknown Source)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2566)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2441)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3214)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3175)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3148)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3124)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3104)
+	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:3097)
+	at it.uniroma2.dicii.bd.progetto.gui.WindowManager.openMenu(WindowManager.java:60)
 	at it.uniroma2.dicii.bd.progetto.gui.WindowManager.changeMenu(WindowManager.java:75)
-	at it.uniroma2.dicii.bd.progetto.entry.MainController.goToCalculateSBDistance(MainController.java:75)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentController.goToFindById(SearchFilamentController.java:27)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
@@ -61,11 +83,33 @@ it.uniroma2.dicii.bd.progetto.errorLogic.GUIError: Location is required.
 	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
 	at com.sun.glass.ui.win.WinApplication.lambda$null$147(WinApplication.java:177)
 	at java.lang.Thread.run(Unknown Source)
-2018-04-24 09:53:04 ERROR [it.uniroma2.dicii.bd.progetto.entry.MainController:77] - Location is required.
-it.uniroma2.dicii.bd.progetto.errorLogic.GUIError: Location is required.
-	at it.uniroma2.dicii.bd.progetto.gui.WindowManager.openMenu(WindowManager.java:65)
+2018-05-14 11:39:33 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByNameIdController:156] - ERRORE: errore di sintassi alla fine dell'input
+  Posizione: 44
+it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError: ERRORE: errore di sintassi alla fine dell'input
+  Posizione: 44
+	at it.uniroma2.dicii.bd.progetto.repository.JDBCSatelliteDAO.findAllInstruments(JDBCSatelliteDAO.java:322)
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.findAllInstruments(StandardUserSession.java:217)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByNameIdController.initialize(SearchFilamentByNameIdController.java:151)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.Trampoline.invoke(Unknown Source)
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.MethodUtil.invoke(Unknown Source)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2566)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2441)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3214)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3175)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3148)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3124)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3104)
+	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:3097)
+	at it.uniroma2.dicii.bd.progetto.gui.WindowManager.openMenu(WindowManager.java:60)
 	at it.uniroma2.dicii.bd.progetto.gui.WindowManager.changeMenu(WindowManager.java:75)
-	at it.uniroma2.dicii.bd.progetto.entry.MainController.goToCalculateSBDistance(MainController.java:75)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentController.goToFindById(SearchFilamentController.java:27)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
@@ -124,11 +168,175 @@ it.uniroma2.dicii.bd.progetto.errorLogic.GUIError: Location is required.
 	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
 	at com.sun.glass.ui.win.WinApplication.lambda$null$147(WinApplication.java:177)
 	at java.lang.Thread.run(Unknown Source)
-2018-04-24 09:53:09 ERROR [it.uniroma2.dicii.bd.progetto.entry.MainController:77] - Location is required.
+2018-05-14 11:45:59 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByContrastEllipticityController$ExceptionListener:107] - 
+it.uniroma2.dicii.bd.progetto.errorLogic.InvalidEllipticityError
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.findFilamentsByContrastAndEllipticity(StandardUserSession.java:279)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByContrastEllipticityController$SearchFilamentsTask.call(SearchFilamentByContrastEllipticityController.java:67)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByContrastEllipticityController$SearchFilamentsTask.call(SearchFilamentByContrastEllipticityController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 11:53:02 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByContrastEllipticityController$ExceptionListener:107] - 
+it.uniroma2.dicii.bd.progetto.errorLogic.InvalidEllipticityError
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.findFilamentsByContrastAndEllipticity(StandardUserSession.java:279)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByContrastEllipticityController$SearchFilamentsTask.call(SearchFilamentByContrastEllipticityController.java:67)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByContrastEllipticityController$SearchFilamentsTask.call(SearchFilamentByContrastEllipticityController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 11:56:10 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByNumOfSegmentsController$ExceptionListener:100] - 
+it.uniroma2.dicii.bd.progetto.errorLogic.InvalidNumOfSegmentsError
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.findFilamentsByNumOfSegments(StandardUserSession.java:302)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByNumOfSegmentsController$SearchFilamentTask.call(SearchFilamentByNumOfSegmentsController.java:60)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByNumOfSegmentsController$SearchFilamentTask.call(SearchFilamentByNumOfSegmentsController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:38:31 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByRegionController$ExceptionListener:97] - empty String
+java.lang.NumberFormatException: empty String
+	at sun.misc.FloatingDecimal.readJavaFormatString(Unknown Source)
+	at sun.misc.FloatingDecimal.parseDouble(Unknown Source)
+	at java.lang.Double.parseDouble(Unknown Source)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByRegionController$SearchByRegionTask.call(SearchFilamentByRegionController.java:120)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByRegionController$SearchByRegionTask.call(SearchFilamentByRegionController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:38:31 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByRegionController$ExceptionListener:103] - empty String
+java.lang.NumberFormatException: empty String
+	at sun.misc.FloatingDecimal.readJavaFormatString(Unknown Source)
+	at sun.misc.FloatingDecimal.parseDouble(Unknown Source)
+	at java.lang.Double.parseDouble(Unknown Source)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByRegionController$SearchByRegionTask.call(SearchFilamentByRegionController.java:120)
+	at it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByRegionController$SearchByRegionTask.call(SearchFilamentByRegionController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:41:41 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - For input string: ""
+java.lang.NumberFormatException: For input string: ""
+	at java.lang.NumberFormatException.forInputString(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:109)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:41:55 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - For input string: "www"
+java.lang.NumberFormatException: For input string: "www"
+	at java.lang.NumberFormatException.forInputString(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:109)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:41:56 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - For input string: "www"
+java.lang.NumberFormatException: For input string: "www"
+	at java.lang.NumberFormatException.forInputString(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:109)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:42:33 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - For input string: "www"
+java.lang.NumberFormatException: For input string: "www"
+	at java.lang.NumberFormatException.forInputString(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:109)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:42:36 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - 
+java.lang.NullPointerException
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.misureMinDinstance(StandardUserSession.java:402)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:121)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:48:11 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - 
+java.lang.NullPointerException
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.misureMinDinstance(StandardUserSession.java:402)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:121)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:48:17 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - 
+java.lang.NullPointerException
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.misureMinDinstance(StandardUserSession.java:402)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:121)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:48:30 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - 
+java.lang.NullPointerException
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.misureMinDinstance(StandardUserSession.java:402)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:121)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:48:33 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - 
+java.lang.NullPointerException
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.misureMinDinstance(StandardUserSession.java:402)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:121)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:48:34 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - 
+java.lang.NullPointerException
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.misureMinDinstance(StandardUserSession.java:402)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:121)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:48:52 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - 
+java.lang.NullPointerException
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.misureMinDinstance(StandardUserSession.java:402)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:121)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:49:06 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - 
+java.lang.NullPointerException
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.misureMinDinstance(StandardUserSession.java:402)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:121)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:49:54 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - 
+java.lang.NullPointerException
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.misureMinDinstance(StandardUserSession.java:402)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:121)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:58:01 ERROR [it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$ExceptionListener:56] - 
+it.uniroma2.dicii.bd.progetto.errorLogic.NotFoundError
+	at it.uniroma2.dicii.bd.progetto.standardUser.StandardUserSession.misureMinDinstance(StandardUserSession.java:410)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:121)
+	at it.uniroma2.dicii.bd.progetto.standardUser.CalculateSBDistanceController$CalculateTask.call(CalculateSBDistanceController.java:1)
+	at javafx.concurrent.Task$TaskCallable.call(Task.java:1423)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-05-14 12:58:24 ERROR [it.uniroma2.dicii.bd.progetto.entry.MainController:86] - Location is required.
 it.uniroma2.dicii.bd.progetto.errorLogic.GUIError: Location is required.
 	at it.uniroma2.dicii.bd.progetto.gui.WindowManager.openMenu(WindowManager.java:65)
 	at it.uniroma2.dicii.bd.progetto.gui.WindowManager.changeMenu(WindowManager.java:75)
-	at it.uniroma2.dicii.bd.progetto.entry.MainController.goToCalculateSBDistance(MainController.java:75)
+	at it.uniroma2.dicii.bd.progetto.entry.MainController.goToCalculateSFDistance(MainController.java:84)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)

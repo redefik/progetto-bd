@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="window" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentByNumOfSegmentsController">
+   <children>
+      <Label layoutX="142.0" layoutY="40.0" text="Ricerca Filamenti per Numero di Segmenti:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="62.0" layoutY="133.0" text="Numero Minimo di Segmenti:" />
+      <TextField fx:id="tfMinNum" layoutX="276.0" layoutY="128.0" onKeyTyped="#clearErrorMessage" />
+      <Label layoutX="62.0" layoutY="196.0" text="Numero Massimo di Segmenti:" />
+      <TextField fx:id="tfMaxNum" layoutX="276.0" layoutY="191.0" onKeyTyped="#clearErrorMessage" />
+      <Button layoutX="259.0" layoutY="271.0" mnemonicParsing="false" onAction="#searchFilaments" prefHeight="58.0" prefWidth="76.0" text="Cerca" />
+      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#gotoPreviousMenu" text="Indietro" />
+      <Label fx:id="labelErrorMessage" layoutX="14.0" layoutY="559.0" prefHeight="21.0" prefWidth="557.0" textFill="RED" />
+      <ProgressIndicator fx:id="progressIndicator" layoutX="370.0" layoutY="274.0" progress="0.0" />
+   </children>
+</AnchorPane>

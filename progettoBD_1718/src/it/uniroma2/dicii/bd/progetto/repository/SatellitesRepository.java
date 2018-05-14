@@ -20,5 +20,7 @@ public interface SatellitesRepository {
 	ArrayList<Instrument> findAllInstrumenOfSatellite(Satellite satellite) throws ConfigurationError, DataAccessError;
 
 	void persistInstrument(Instrument instrument, String satellite) throws ConfigurationError, DataAccessError;
+
+	ArrayList<Instrument> findAllInstruments() throws ConfigurationError, DataAccessError;
 	
 }

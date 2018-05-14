@@ -21,7 +21,7 @@
             <Font size="16.0" />
          </font>
       </Button>
-      <Button layoutX="364.0" layoutY="27.0" mnemonicParsing="false" onAction="#gotoPreviousMenu" prefHeight="30.0" prefWidth="207.0" text="Esci dell'area amministratore">
+      <Button layoutX="364.0" layoutY="27.0" mnemonicParsing="false" onAction="#gotoPreviousMenu" prefHeight="30.0" prefWidth="207.0" text="Esci dall'area amministratore">
          <font>
             <Font size="14.0" />
          </font>

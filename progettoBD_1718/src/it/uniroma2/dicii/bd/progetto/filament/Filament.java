@@ -17,6 +17,10 @@ public class Filament {
 		this.instrumentName = filamentBean.getInstrumentName();
 	}
 	
+	public Filament(String name) {
+		this.name = name;
+	}
+	
 	public Filament() {
 	}
 

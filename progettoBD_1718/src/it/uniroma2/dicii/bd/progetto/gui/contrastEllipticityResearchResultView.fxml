@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.dicii.bd.progetto.standardUser.ContrastEllipticityResearchResultController">
+   <children>
+      <Label layoutX="245.0" layoutY="25.0" text="Risultati della ricerca:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="34.0" layoutY="52.0" text="Requisiti:" underline="true">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="34.0" layoutY="89.0" text="Ellitticità Minima:" />
+      <Label fx:id="labelMinEllipticity" layoutX="168.0" layoutY="89.0" />
+      <Label layoutX="245.0" layoutY="89.0" text="Ellitticità Massima:" />
+      <Label fx:id="labelMaxEllipticity" layoutX="383.0" layoutY="89.0" />
+      <Label layoutX="34.0" layoutY="119.0" text="Brillanza Minima(%):" />
+      <Label fx:id="labelMinBrightness" layoutX="179.0" layoutY="119.0" />
+      <Label layoutX="34.0" layoutY="150.0" text="Percentuale di Filamenti compatibili con i Requisiti:" underline="true" />
+      <Label fx:id="labelResult" layoutX="384.0" layoutY="150.0">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+      <TableView fx:id="tableFilaments" layoutX="5.0" layoutY="225.0" prefHeight="323.0" prefWidth="588.0">
+        <columns>
+          <TableColumn fx:id="tColName" prefWidth="200.0" text="Nome" />
+          <TableColumn fx:id="tColId" minWidth="0.0" prefWidth="74.0" text="Id" />
+            <TableColumn fx:id="tColEllipticity" minWidth="0.0" prefWidth="78.0" text="Ellitticità" />
+            <TableColumn fx:id="tColContrast" prefWidth="77.0" text="Contrasto" />
+            <TableColumn fx:id="tColSegments" prefWidth="77.0" text="Segmenti" />
+            <TableColumn fx:id="tColInstrument" prefWidth="79.0" resizable="false" text="Strumento" />
+        </columns>
+      </TableView>
+      <Label layoutX="34.0" layoutY="226.0" underline="true" />
+      <Button fx:id="btnNextFilaments" layoutX="457.0" layoutY="555.0" mnemonicParsing="false" onAction="#visualizeNextFilaments" prefHeight="31.0" prefWidth="129.0" text="Successivi &gt;" />
+      <Button fx:id="btnPreviousFilaments" layoutX="319.0" layoutY="555.0" mnemonicParsing="false" onAction="#visualizePreviousFilaments" prefHeight="31.0" prefWidth="129.0" text="&lt; Precedenti" />
+      <Label layoutX="229.0" layoutY="188.0" text="Dettaglio dei Filamenti trovati:" underline="true" />
+   </children>
+</AnchorPane>

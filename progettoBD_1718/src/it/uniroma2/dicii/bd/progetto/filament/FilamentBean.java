@@ -12,6 +12,15 @@ public class FilamentBean {
 	public FilamentBean() {
 		
 	}
+	
+	public FilamentBean(Filament filament) {
+		this.name = filament.getName();
+		this.number = filament.getNumber();
+		this.numberOfSegments = filament.getNumberOfSegments();
+		this.ellipticity = filament.getEllipticity();
+		this.contrast = filament.getContrast();
+		this.instrumentName = filament.getInstrumentName();
+	}
 
 	public String getName() {
 		return name;

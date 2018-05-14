@@ -15,7 +15,9 @@ import it.uniroma2.dicii.bd.progetto.errorLogic.BatchError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
 import it.uniroma2.dicii.bd.progetto.filament.BorderPoint;
+import it.uniroma2.dicii.bd.progetto.filament.BorderPointFilament;
 import it.uniroma2.dicii.bd.progetto.filament.Filament;
+import it.uniroma2.dicii.bd.progetto.filament.FilamentWithBorderPoints;
 import it.uniroma2.dicii.bd.progetto.filament.FilamentWithSegments;
 import it.uniroma2.dicii.bd.progetto.filament.SegmentPoint;
 import it.uniroma2.dicii.bd.progetto.filament.SegmentPointImported;
@@ -27,14 +29,34 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 	private static final String QUERY_INSERT_FILAMENT = "INSERT INTO FILAMENTO VALUES (?,?,?,?,?,?)";
 	private static final String QUERY_INSERT_BORDER_POINT_FILAMENT = "INSERT INTO PUNTOCONTORNOFILAMENTO VALUES (?,?,?,?)";
 	private static final String QUERY_INSERT_BORDER_POINT = "INSERT INTO PUNTOCONTORNO VALUES (?,?,?)";
+	private static final String QUERY_SEARCH_FILAMENT_BY_NAME = "SELECT * FROM FILAMENTO WHERE NOME = ?";
 	private static final String QUERY_SEARCH_FILAMENT_BY_ID_AND_INSTRUMENT_1 = "SELECT * FROM FILAMENTO WHERE ID = ";
 	private static final String QUERY_SEARCH_FILAMENT_BY_ID_AND_INSTRUMENT_2 = " AND (STRUMENTO = '";
 	private static final String QUERY_SEARCH_FILAMENT_BY_ID_AND_INSTRUMENT_3 = " OR STRUMENTO = '";
 	private static final String QUERY_SEARCH_FILAMENT_NAME = 
-			"SELECT F.NOME, F.ID, F.ELLITTICITA, F.CONTRASTO, F.NUMEROSEGMENTI, F.STRUMENTO"
-			+ " FROM FILAMENTO F JOIN STRUMENTO S ON F.STRUMENTO = S.NOME WHERE F.ID = ? AND S.Satellite = ?";
+								"SELECT F.NOME, F.ID, F.ELLITTICITA, F.CONTRASTO, F.NUMEROSEGMENTI, F.STRUMENTO"
+								+ " FROM FILAMENTO F JOIN STRUMENTO S ON F.STRUMENTO = S.NOME WHERE F.ID = ? AND S.Satellite = ?";
 	private static final String QUERY_INSERT_SEGMENT_POINTS = "INSERT INTO PUNTOSEGMENTO VALUES(";
 	private static final String QUERY_UPDATE_SEGMENT_NUMBER = "UPDATE FILAMENTO SET NUMEROSEGMENTI = ";
+	private static final String QUERY_SEARCH_BORDER = "SELECT LATITUDINE, LONGITUDINE FROM PUNTOCONTORNOFILAMENTO WHERE FILAMENTO = ? "
+								+ "ORDER BY LATITUDINE, LONGITUDINE";
+	private static final String QUERY_SEARCH_FILAMENT_PARTIALLY_INTO_REGION = "SELECT DISTINCT FILAMENTO FROM PUNTOCONTORNOFILAMENTO WHERE "
+								+ "LATITUDINE <= ? AND LATITUDINE >= ? AND LONGITUDINE <= ? AND LONGITUDINE >= ?";
+	private static final String QUERY_FIND_FILAMENT_BY_NAME = "SELECT * FROM FILAMENTO WHERE NOME = ?";
+	private static final String QUERY_FIND_FILAMENT_BY_ID_AND_INSTRUMENT = "SELECT * FROM FILAMENTO WHERE ID = ? AND STRUMENTO = ?";
+	private static final String QUERY_FIND_BORDER_POINTS_FILAMENT = "SELECT * FROM PUNTOCONTORNOFILAMENTO WHERE FILAMENTO = ?";
+	private static final String QUERY_COUNT_FILAMENTS = "SELECT COUNT(*) FROM FILAMENTO;";
+	private static final String QUERY_FIND_FILAMENT_BY_ELLIPTICITY_AND_CONTRAST = 
+			"SELECT * FROM FILAMENTO WHERE ELLITTICITA >= ? AND ELLITTICITA <= ? AND CONTRASTO >= ?";
+	private static final String QUERY_FIND_FILAMENT_BY_NUM_OF_SEGMENTS = 
+			"SELECT * FROM FILAMENTO WHERE NUMEROSEGMENTI >= ? AND NUMEROSEGMENTI <= ?";
+	private static final String QUERY_FILAMENTS_WITH_POINTS_IN_THE_AREA = 
+			"SELECT * FROM PUNTOCONTORNOFILAMENTO "
+			+ "EXCEPT SELECT * FROM PUNTOCONTORNOFILAMENTO WHERE ?>LATITUDINE OR LATITUDINE>? OR ?>LONGITUDINE OR LONGITUDINE>?";
+	private static final String QUERY_FIND_SEGMENT = "SELECT * FROM PUNTOSEGMENTO WHERE FILAMENTO = ? AND IDSEGMENTO = ?";
+	private static final String QUERY_FIND_FILAMENT = "SELECT * FROM FILAMENTO WHERE NOME = ?";
+	private static final String QUERY_FIND_BORDER = 
+			"SELECT * FROM PUNTOCONTORNOFILAMENTO WHERE FILAMENTO = ? AND SATELLITE = ?";
 	
 	@Override
 	public void insertAllFilaments(ArrayList<Filament> filaments) throws ConfigurationError, DataAccessError, BatchError {
@@ -392,5 +414,564 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 			}
 		}
 	}
+
+	@Override
+	public boolean existFilamentWithName(String name) throws ConfigurationError, DataAccessError {
+		
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+				
+		try {
+					
+			//Si richiede una connessione al JDBCConnectionPool
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+					
+			PreparedStatement statement = connection.prepareStatement(QUERY_SEARCH_FILAMENT_BY_NAME);
+			statement.setString(1, name);
+			ResultSet resultSet = statement.executeQuery();
+			
+			return (resultSet.next());
+					
+			} catch (IOException | ClassNotFoundException | NullPointerException e) {
+				throw new ConfigurationError(e.getMessage(), e.getCause());
+			} catch (SQLException e) {
+				throw new DataAccessError(e.getMessage(), e.getCause());
+				
+			} finally {
+				// Si restituisce la connessione al JDBCConnectionPool
+				if (jdbcConnectionPool != null) {
+					try {
+						jdbcConnectionPool.releaseConnection(connection);
+					} catch (SQLException e) {
+						throw new DataAccessError(e.getMessage(), e.getCause());
+					}
+				}
+			}		
+		}
+
+	@Override
+	public ArrayList<BorderPoint> findBorder(String filament) throws ConfigurationError, DataAccessError {
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		
+		try {
+			
+			//Si richiede una connessione al JDBCConnectionPool
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			
+			PreparedStatement statement = connection.prepareStatement(QUERY_SEARCH_BORDER);
+			statement.setString(1, filament);
+			ResultSet resultSet = statement.executeQuery();
+			
+			ArrayList<BorderPoint> border = new ArrayList<BorderPoint>();
+			
+			//Per ogni punto del contorno trovato si crea un oggetto BorderPoint e si aggiunge a border
+			while (resultSet.next()) {
+				
+				BorderPoint borderPoint = new BorderPoint();
+				borderPoint.setLatitude(resultSet.getDouble("latitudine"));
+				borderPoint.setLongitude(resultSet.getDouble("longitudine"));
+				borderPoint.setFilamentNames(null);
+				borderPoint.setSatellite(null);
+				
+				border.add(borderPoint);
+			}
+		
+			return border;
+			
+			
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+
+	@Override
+	public ArrayList<String> findAllFilamentPartiallyIntoRegion(double latitude, double longitude, double width, double heigth)
+			throws ConfigurationError, DataAccessError {
+		
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		
+		try {
+			
+			//Si richiede una connessione al JDBCConnectionPool
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			
+			PreparedStatement statement = connection.prepareStatement(QUERY_SEARCH_FILAMENT_PARTIALLY_INTO_REGION);
+			statement.setDouble(1, latitude + (heigth/2));
+			statement.setDouble(2, latitude - (heigth/2));
+			statement.setDouble(3, longitude + (width/2));
+			statement.setDouble(4, longitude - (width/2));
+			
+			ResultSet resultSet = statement.executeQuery();
+			
+			ArrayList<String> filaments = new ArrayList<String>();
+			
+			//Per ogni filamento trovato, il suo nome viene aggiunto alla lista che sarà restituita
+			while (resultSet.next()) {
+				
+				filaments.add(resultSet.getString("filamento"));
+			}
+		
+			return filaments;
+			
+			
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
 	
+	@Override
+	public Filament findFilamentByName(String name) throws ConfigurationError, DataAccessError {
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		
+		try {
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_FILAMENT_BY_NAME);
+			statement.setString(1, name);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				Filament filament = new Filament();
+				filament.setName(resultSet.getString(1));
+				filament.setNumber(resultSet.getInt(2));
+				filament.setEllipticity(resultSet.getDouble(3));
+				filament.setContrast(resultSet.getDouble(4));
+				filament.setNumberOfSegments(resultSet.getInt(5));
+				filament.setInstrumentName(resultSet.getString(6));
+				return filament;
+			} else {
+				return null;
+			}
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+
+	@Override
+	public Filament findFilamentByIdAndInstrument(int filamentId, String instrumentName) throws ConfigurationError, DataAccessError {
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		
+		try {
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_FILAMENT_BY_ID_AND_INSTRUMENT);
+			statement.setInt(1, filamentId);
+			statement.setString(2, instrumentName);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				Filament filament = new Filament();
+				filament.setName(resultSet.getString(1));
+				filament.setNumber(resultSet.getInt(2));
+				filament.setEllipticity(resultSet.getDouble(3));
+				filament.setContrast(resultSet.getDouble(4));
+				filament.setNumberOfSegments(resultSet.getInt(5));
+				filament.setInstrumentName(resultSet.getString(6));
+				return filament;
+			} else {
+				return null;
+			}
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+
+	@Override
+	public ArrayList<BorderPointFilament> findBorderPointsOfFilament(Filament filament)
+			throws ConfigurationError, DataAccessError {
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		
+		try {
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_BORDER_POINTS_FILAMENT);
+			statement.setString(1, filament.getName());
+			ResultSet resultSet = statement.executeQuery();
+			ArrayList<BorderPointFilament> borderPoints = new ArrayList<>();
+			while (resultSet.next()) {
+				double pointLatitude = resultSet.getDouble(1);
+				double pointLongitude = resultSet.getDouble(2);
+				String filamentName = resultSet.getString(4);
+				String satelliteName = resultSet.getString(3);
+				BorderPointFilament borderPoint = new BorderPointFilament(pointLatitude, pointLongitude, filamentName, satelliteName);
+				borderPoints.add(borderPoint);
+			}
+			return borderPoints;
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+
+	@Override
+	public long getFilamentsCount() throws ConfigurationError, DataAccessError {
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		
+		try {
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(QUERY_COUNT_FILAMENTS);
+			resultSet.next();
+			return resultSet.getLong(1);
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+
+	@Override
+	public ArrayList<Filament> findFilamentsByContrastAndEllipticity(double minContrast, double minEllipticity,
+			double maxEllipticity) throws ConfigurationError, DataAccessError {
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		
+		try {
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_FILAMENT_BY_ELLIPTICITY_AND_CONTRAST);
+			statement.setDouble(1, minEllipticity);
+			statement.setDouble(2, maxEllipticity);
+			statement.setDouble(3, minContrast);
+			ResultSet resultSet = statement.executeQuery();
+			ArrayList<Filament> filaments = new ArrayList<>();
+			while (resultSet.next()) {
+				Filament filament = new Filament();
+				filament.setName(resultSet.getString(1));
+				filament.setNumber(resultSet.getInt(2));
+				filament.setEllipticity(resultSet.getDouble(3));
+				filament.setContrast(resultSet.getDouble(4));
+				filament.setNumberOfSegments(resultSet.getInt(5));
+				filament.setInstrumentName(resultSet.getString(6));
+				filaments.add(filament);
+			}
+			return filaments;
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+
+	@Override
+	public ArrayList<Filament> findFilamentByNumOfSegments(int minNum, int maxNum)
+			throws ConfigurationError, DataAccessError {
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		
+		try {
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_FILAMENT_BY_NUM_OF_SEGMENTS);
+			statement.setInt(1, minNum);
+			statement.setInt(2, maxNum);
+			ResultSet resultSet = statement.executeQuery();
+			ArrayList<Filament> filaments = new ArrayList<>();
+			while (resultSet.next()) {
+				Filament filament = new Filament();
+				filament.setName(resultSet.getString(1));
+				filament.setNumber(resultSet.getInt(2));
+				filament.setEllipticity(resultSet.getDouble(3));
+				filament.setContrast(resultSet.getDouble(4));
+				filament.setNumberOfSegments(resultSet.getInt(5));
+				filament.setInstrumentName(resultSet.getString(6));
+				filaments.add(filament);
+			}
+			return filaments;
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+	
+	//_________________________________________________________________________________________-
+	
+	@Override
+	public ArrayList<FilamentWithBorderPoints> findFilamentsWithBorderPointsInSquare(double x0, double x1, double y0, double y1) throws ConfigurationError, DataAccessError {
+		
+		ArrayList<FilamentWithBorderPoints> filamentsWithBorderPointsInArea = new ArrayList<>();
+		
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		try {
+			//Si richiede una connessione al JDBCConnectionPool
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			
+			//Si imposta l'autocommit a false. Infatti se l'inserimento di una tupla nel database fallisce allora
+			//e' neccessario effettuare un rollback
+			connection.setAutoCommit(false);
+			
+			//Trovo tutti i filamenti presenti nell'area selezionata
+			PreparedStatement statement = connection.prepareStatement(QUERY_FILAMENTS_WITH_POINTS_IN_THE_AREA);
+			statement.setDouble(1, x0);
+			statement.setDouble(2, x1);
+			statement.setDouble(3, y0);
+			statement.setDouble(4, y1);
+			ResultSet resultSet = statement.executeQuery();
+			while(resultSet.next()) {
+				FilamentWithBorderPoints filamentWithBorder = new FilamentWithBorderPoints();
+				filamentWithBorder.setLatitude(resultSet.getDouble("latitudine"));
+				filamentWithBorder.setLongitude(resultSet.getDouble("longitudine"));
+				filamentWithBorder.setSatellite(resultSet.getString("satellite"));
+				filamentWithBorder.setFilament(resultSet.getString("filamento"));
+				filamentsWithBorderPointsInArea.add(filamentWithBorder);				
+			}
+			connection.commit();
+			return filamentsWithBorderPointsInArea;
+				
+			} catch (IOException | ClassNotFoundException | NullPointerException e) {
+				throw new ConfigurationError(e.getMessage(), e.getCause());
+			} catch (SQLException e) {
+				//Se viene sollevata una eccezione durante le operazioni sul database si effettua il rollback
+				if (connection != null) {
+					try {
+						connection.rollback();
+					} catch(SQLException e1) {
+						throw new DataAccessError(e1.getMessage(), e1.getCause());
+					}
+				}
+				throw new DataAccessError(e.getMessage(), e.getCause());
+			} finally {
+				// Si restituisce la connessione al JDBCConnectionPool
+				if (jdbcConnectionPool != null) {
+					try {
+						jdbcConnectionPool.releaseConnection(connection);
+					} catch (SQLException e) {
+						throw new DataAccessError(e.getMessage(), e.getCause());
+					}
+				}
+			}
+	}
+	
+	@Override
+	public Filament findFilament(FilamentWithBorderPoints filamentWithBorderPoints) throws DataAccessError, ConfigurationError {
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		Filament filament = new Filament();
+
+		try {
+			//Si richiede una connessione al JDBCConnectionPool
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_FILAMENT);
+			statement.setString(1, filamentWithBorderPoints.getFilament());
+				
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			filament.setName(filamentWithBorderPoints.getFilament());
+			filament.setNumber(resultSet.getInt("id"));
+			filament.setNumberOfSegments(resultSet.getInt("numerosegmenti"));
+			filament.setEllipticity(resultSet.getDouble("ellitticita"));
+			filament.setContrast(resultSet.getDouble("contrasto"));
+			filament.setInstrumentName(resultSet.getString("strumento"));
+			
+			return filament;
+			
+		}catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+	
+	@Override
+	public ArrayList<SegmentPoint> findSegment(String filamentName, int idSegment) throws DataAccessError, ConfigurationError {
+		ArrayList<SegmentPoint> segments = new ArrayList<SegmentPoint>();
+
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+
+		try {
+			//Si richiede una connessione al JDBCConnectionPool
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_SEGMENT);
+			statement.setString(1, filamentName);
+			statement.setInt(2,idSegment);
+			ResultSet resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				SegmentPoint segmentPoint = new SegmentPoint();
+				
+				segmentPoint.setFilament(new Filament(filamentName));
+				segmentPoint.setSegmentId(idSegment);
+				segmentPoint.setLatitude(resultSet.getDouble("latitudine"));
+				segmentPoint.setLongitude(resultSet.getDouble("longitudine"));
+				segmentPoint.setProgNumber(resultSet.getInt("numeroprogressivo"));
+				segmentPoint.setType(resultSet.getString("tipo").charAt(0));
+
+				segments.add(segmentPoint);
+			}
+			return segments;
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+	
+	@Override
+	public ArrayList<FilamentWithBorderPoints> findBorder(String filamentName, String satelliteName) throws ConfigurationError, DataAccessError {
+		
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		ArrayList<FilamentWithBorderPoints> border = new ArrayList<>();
+		try {
+			//Si richiede una connessione al JDBCConnectionPool
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			
+			//Si imposta l'autocommit a false. Infatti se l'inserimento di una tupla nel database fallisce allora
+			//e' neccessario effettuare un rollback
+			connection.setAutoCommit(false);
+			
+			//cerco tutti i punti del bordo del filamento
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_BORDER);
+			statement.setString(1, filamentName);
+			statement.setString(2, satelliteName);
+			ResultSet resultSet = statement.executeQuery();
+			while(resultSet.next()) {
+				FilamentWithBorderPoints filamentsWithBorderPoints = new FilamentWithBorderPoints();
+				filamentsWithBorderPoints.setFilament(resultSet.getString("filamento"));
+				filamentsWithBorderPoints.setSatellite(resultSet.getString("satellite"));
+				filamentsWithBorderPoints.setLatitude(resultSet.getDouble("latitudine"));
+				filamentsWithBorderPoints.setLongitude(resultSet.getDouble("longitudine"));
+				border.add(filamentsWithBorderPoints);
+			}
+			
+			connection.commit();
+			return border;
+			
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			//Se viene sollevata una eccezione durante le operazioni sul database si effettua il rollback
+			if (connection != null) {
+				try {
+					connection.rollback();
+				} catch(SQLException e1) {
+					throw new DataAccessError(e1.getMessage(), e1.getCause());
+				}
+			}
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
 }

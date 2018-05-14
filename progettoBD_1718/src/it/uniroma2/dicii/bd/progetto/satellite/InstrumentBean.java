@@ -34,4 +34,9 @@ public class InstrumentBean {
 	public boolean equals(InstrumentBean instrumentBean) {
 		return (this.name.equals(instrumentBean.getName()));
 	}
+	
+	@Override
+	public String toString() {
+		return this.name;
+	}
 }

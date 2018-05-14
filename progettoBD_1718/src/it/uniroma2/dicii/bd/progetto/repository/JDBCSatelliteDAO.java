@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
@@ -19,7 +20,8 @@ public class JDBCSatelliteDAO implements SatellitesRepository {
 	
 	private static final String QUERY_FIND_ALL_AGENCIES = "SELECT * FROM AGENZIA";
 	private static final String QUERY_FIND_ALL_SATELLITES = "SELECT * FROM SATELLITE";
-	private static final String QUERY_FIND_ALL_INSTRUMENTS = "SELECT * FROM STRUMENTO WHERE SATELLITE = ?";
+	private static final String QUERY_FIND_ALL_INSTRUMENTS = "SELECT * FROM STRUMENTO";
+	private static final String QUERY_FIND_ALL_SATELLITE_INSTRUMENTS = "SELECT * FROM STRUMENTO WHERE SATELLITE = ?";
 	private static final String QUERY_INSERT_SATELLITE = "INSERT INTO SATELLITE VALUES (?,?,?)";
 	private static final String QUERY_INSERT_AGENCY_SATELLITE = "INSERT INTO AGENZIASATELLITE VALUES (?,?)";
 	private static final String QUERY_SEARCH_SATELLITE = "SELECT * FROM SATELLITE WHERE NOME = ?";
@@ -233,7 +235,7 @@ public class JDBCSatelliteDAO implements SatellitesRepository {
 			
 			jdbcConnectionPool = JDBCConnectionPool.getInstance();
 			connection = jdbcConnectionPool.getConnection();
-			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_ALL_INSTRUMENTS);
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_ALL_SATELLITE_INSTRUMENTS);
 			statement.setString(1, satellite.getName());
 			ResultSet resultSet = statement.executeQuery();
 			
@@ -281,6 +283,40 @@ public class JDBCSatelliteDAO implements SatellitesRepository {
 				throw new DataAccessError(DataAccessError.INSERT_FAILED);
 			}
 			
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+	
+	@Override
+	public ArrayList<Instrument> findAllInstruments() throws ConfigurationError, DataAccessError {
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		
+		try {
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			
+			Statement statement = connection.createStatement();
+			ResultSet resultSet =  statement.executeQuery(QUERY_FIND_ALL_INSTRUMENTS);
+			
+			ArrayList<Instrument> instruments = new ArrayList<>();
+			while (resultSet.next()) {
+				Instrument instrument = new Instrument(resultSet.getString("nome"), resultSet.getString("elencobande"));
+				instruments.add(instrument);
+			}
+			return instruments;
 		} catch (IOException | ClassNotFoundException | NullPointerException e) {
 			throw new ConfigurationError(e.getMessage(), e.getCause());
 		} catch (SQLException e) {

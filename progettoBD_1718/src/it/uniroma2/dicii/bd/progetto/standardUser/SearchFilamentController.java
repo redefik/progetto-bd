@@ -9,6 +9,12 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 
 public class SearchFilamentController {
+	
+	private static final String SEARCH_FILAMENT_BY_ID_MENU = "../gui/searchFilamentByNameIdView.fxml";
+	private static final String SEARCH_FILAMENT_BY_CONTRAST_MENU = "../gui/searchFilamentByContrastEllipticity.fxml";
+	private static final String SEARCH_FILAMENT_BY_NUMSEGMENTS_MENU = "../gui/searchFilamentByNumOfSegments.fxml";
+	private static final String SEARCH_FILAMENT_BY_REGION = "../gui/searchFilamentByRegionView.fxml";
+
 
 	@FXML 
 	private AnchorPane window;
@@ -18,13 +24,41 @@ public class SearchFilamentController {
 		WindowManager.getInstance().setWindow(window);
 	}
 
-	public void goToFindById() {}
+	public void goToFindById() {
+		try {
+			WindowManager.getInstance().changeMenu(SEARCH_FILAMENT_BY_ID_MENU);
+		} catch(GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
 
-	public void goToFindByContrast() {}
+	public void goToFindByContrast() {
+		try {
+			WindowManager.getInstance().changeMenu(SEARCH_FILAMENT_BY_CONTRAST_MENU);
+		} catch(GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
 
-	public void goToFindBySegmentNumber() {}
+	public void goToFindBySegmentNumber() {
+		try {
+			WindowManager.getInstance().changeMenu(SEARCH_FILAMENT_BY_NUMSEGMENTS_MENU);
+		} catch(GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
 
-	public void goToFindByRegion() {}
+	public void goToFindByRegion() {
+		try {
+			WindowManager.getInstance().changeMenu(SEARCH_FILAMENT_BY_REGION);
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
 	
 	public void gotoPreviousMenu() {
 		try {

@@ -8,6 +8,8 @@ public class BorderPoint {
 	private String satellite;
 	private ArrayList<String> filamentNames = new ArrayList<String>();
 	
+	public BorderPoint() {}
+	
 	public BorderPoint(double latitude, double longitude, String satellite, ArrayList<String> filamentNames) {
 		this.latitude = latitude;
 		this.longitude = longitude;

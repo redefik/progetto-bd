@@ -9,6 +9,13 @@ public class StarBean {
 	private double flow;
 	private String classification; 
 	private String satellite;
+	
+	public String toString() {
+		String string;
+		string = this.name + " ( " + this.id + " , " + this.satellite + " ); " + "Position: " + this.latitude 
+				+ " lat, " + this.longitude + " long ; Flow: " + this.flow +" ; Type: " + this.classification;
+		return string;
+	}
 
 	public StarBean(String name, int id, double latitude, double longitude, double flow, String classification, String satellite) {
 
@@ -20,6 +27,17 @@ public class StarBean {
 		this.classification = classification;
 		this.satellite = satellite;
 
+	}
+	
+	public StarBean(Star star) {
+		
+		this.name = star.getName();
+		this.id = star.getId();
+		this.latitude = star.getLatitude();
+		this.longitude = star.getLongitude();
+		this.flow = star.getFlow();
+		this.classification = star.getClassification();
+		this.satellite = star.getSatellite();
 	}
 	
 	public StarBean() {}

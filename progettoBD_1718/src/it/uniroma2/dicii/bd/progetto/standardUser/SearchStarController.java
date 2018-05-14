@@ -12,6 +12,8 @@ public class SearchStarController {
 
 	@FXML 
 	private AnchorPane window;
+	private static final String SEARCH_BY_FILAMENT_MENU = "../gui/searchStarByFilamentView.fxml";
+	private static final String SEARCH_BY_REGION_MENU = "../gui/searchStarByRegionView.fxml";
 	
 	@FXML 
 	public void initialize () {
@@ -27,8 +29,22 @@ public class SearchStarController {
 		}
 	}
 
-	public void goToSearchByFilament() {}
+	public void goToSearchByFilament() {
+		try {
+			WindowManager.getInstance().changeMenu(SEARCH_BY_FILAMENT_MENU);
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
 
-	public void goToSearchByRegion() {}
+	public void goToSearchByRegion() {
+		try {
+			WindowManager.getInstance().changeMenu(SEARCH_BY_REGION_MENU);
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
+	}
 
 }
