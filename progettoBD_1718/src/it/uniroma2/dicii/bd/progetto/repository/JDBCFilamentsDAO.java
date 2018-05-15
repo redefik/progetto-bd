@@ -17,7 +17,6 @@ import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
 import it.uniroma2.dicii.bd.progetto.filament.BorderPoint;
 import it.uniroma2.dicii.bd.progetto.filament.BorderPointFilament;
 import it.uniroma2.dicii.bd.progetto.filament.Filament;
-import it.uniroma2.dicii.bd.progetto.filament.FilamentWithBorderPoints;
 import it.uniroma2.dicii.bd.progetto.filament.FilamentWithSegments;
 import it.uniroma2.dicii.bd.progetto.filament.SegmentPoint;
 import it.uniroma2.dicii.bd.progetto.filament.SegmentPointImported;
@@ -50,12 +49,11 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 			"SELECT * FROM FILAMENTO WHERE ELLITTICITA >= ? AND ELLITTICITA <= ? AND CONTRASTO >= ?";
 	private static final String QUERY_FIND_FILAMENT_BY_NUM_OF_SEGMENTS = 
 			"SELECT * FROM FILAMENTO WHERE NUMEROSEGMENTI >= ? AND NUMEROSEGMENTI <= ?";
-	private static final String QUERY_FILAMENTS_WITH_POINTS_IN_THE_AREA = 
+	private static final String QUERY_FIND_BORDER_POINT_IN_THE_AREA = 
 			"SELECT * FROM PUNTOCONTORNOFILAMENTO "
 			+ "EXCEPT SELECT * FROM PUNTOCONTORNOFILAMENTO WHERE ?>LATITUDINE OR LATITUDINE>? OR ?>LONGITUDINE OR LONGITUDINE>?";
-	private static final String QUERY_FIND_SEGMENT = "SELECT * FROM PUNTOSEGMENTO WHERE FILAMENTO = ? AND IDSEGMENTO = ?";
-	private static final String QUERY_FIND_FILAMENT = "SELECT * FROM FILAMENTO WHERE NOME = ?";
-	private static final String QUERY_FIND_BORDER = 
+	private static final String QUERY_FIND_SEGMENT_BY_ID_AND_SATELLITE_NAME = "SELECT * FROM PUNTOSEGMENTO WHERE FILAMENTO = ? AND IDSEGMENTO = ?";
+	private static final String QUERY_FIND_FILAMENT_BORDER = 
 			"SELECT * FROM PUNTOCONTORNOFILAMENTO WHERE FILAMENTO = ? AND SATELLITE = ?";
 	
 	@Override
@@ -774,12 +772,12 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 		}
 	}
 	
-	//_________________________________________________________________________________________-
+	//_________________________________________________________________________________________
 	
 	@Override
-	public ArrayList<FilamentWithBorderPoints> findFilamentsWithBorderPointsInSquare(double x0, double x1, double y0, double y1) throws ConfigurationError, DataAccessError {
+	public ArrayList<BorderPointFilament> findFilamentsWithBorderPointsInSquare(double x0, double x1, double y0, double y1) throws ConfigurationError, DataAccessError {
 		
-		ArrayList<FilamentWithBorderPoints> filamentsWithBorderPointsInArea = new ArrayList<>();
+		ArrayList<BorderPointFilament> filamentsWithBorderPointsInArea = new ArrayList<>();
 		
 		Connection connection = null;
 		JDBCConnectionPool jdbcConnectionPool = null;
@@ -793,18 +791,18 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 			connection.setAutoCommit(false);
 			
 			//Trovo tutti i filamenti presenti nell'area selezionata
-			PreparedStatement statement = connection.prepareStatement(QUERY_FILAMENTS_WITH_POINTS_IN_THE_AREA);
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_BORDER_POINT_IN_THE_AREA);
 			statement.setDouble(1, x0);
 			statement.setDouble(2, x1);
 			statement.setDouble(3, y0);
 			statement.setDouble(4, y1);
 			ResultSet resultSet = statement.executeQuery();
-			while(resultSet.next()) {
-				FilamentWithBorderPoints filamentWithBorder = new FilamentWithBorderPoints();
-				filamentWithBorder.setLatitude(resultSet.getDouble("latitudine"));
-				filamentWithBorder.setLongitude(resultSet.getDouble("longitudine"));
-				filamentWithBorder.setSatellite(resultSet.getString("satellite"));
-				filamentWithBorder.setFilament(resultSet.getString("filamento"));
+			while(resultSet.next()) { // prendo i punti del contorno che rispettano le caratteristiche
+				BorderPointFilament filamentWithBorder = new BorderPointFilament();
+				filamentWithBorder.setPointLatitude(resultSet.getDouble("latitudine"));
+				filamentWithBorder.setPointLongitude(resultSet.getDouble("longitudine"));
+				filamentWithBorder.setSatelliteName(resultSet.getString("satellite"));
+				filamentWithBorder.setFilamentName(resultSet.getString("filamento"));
 				filamentsWithBorderPointsInArea.add(filamentWithBorder);				
 			}
 			connection.commit();
@@ -835,7 +833,7 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 	}
 	
 	@Override
-	public Filament findFilament(FilamentWithBorderPoints filamentWithBorderPoints) throws DataAccessError, ConfigurationError {
+	public Filament findFilamentByBorderPoints(BorderPointFilament filamentWithBorderPoints) throws DataAccessError, ConfigurationError {
 		Connection connection = null;
 		JDBCConnectionPool jdbcConnectionPool = null;
 		Filament filament = new Filament();
@@ -844,12 +842,12 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 			//Si richiede una connessione al JDBCConnectionPool
 			jdbcConnectionPool = JDBCConnectionPool.getInstance();
 			connection = jdbcConnectionPool.getConnection();
-			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_FILAMENT);
-			statement.setString(1, filamentWithBorderPoints.getFilament());
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_FILAMENT_BY_NAME);
+			statement.setString(1, filamentWithBorderPoints.getFilamentName());
 				
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
-			filament.setName(filamentWithBorderPoints.getFilament());
+			filament.setName(filamentWithBorderPoints.getFilamentName());
 			filament.setNumber(resultSet.getInt("id"));
 			filament.setNumberOfSegments(resultSet.getInt("numerosegmenti"));
 			filament.setEllipticity(resultSet.getDouble("ellitticita"));
@@ -874,9 +872,10 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 		}
 	}
 	
+	// La funzione cerca tutti i punti del segmento che formano il segmento con dato id e nome satellite
 	@Override
-	public ArrayList<SegmentPoint> findSegment(String filamentName, int idSegment) throws DataAccessError, ConfigurationError {
-		ArrayList<SegmentPoint> segments = new ArrayList<SegmentPoint>();
+	public ArrayList<SegmentPoint> findSegmentBySatelliteNameAndId(String filamentName, int idSegment) throws DataAccessError, ConfigurationError {
+		ArrayList<SegmentPoint> segment = new ArrayList<SegmentPoint>();
 
 		Connection connection = null;
 		JDBCConnectionPool jdbcConnectionPool = null;
@@ -885,11 +884,10 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 			//Si richiede una connessione al JDBCConnectionPool
 			jdbcConnectionPool = JDBCConnectionPool.getInstance();
 			connection = jdbcConnectionPool.getConnection();
-			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_SEGMENT);
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_SEGMENT_BY_ID_AND_SATELLITE_NAME);
 			statement.setString(1, filamentName);
 			statement.setInt(2,idSegment);
 			ResultSet resultSet = statement.executeQuery();
-
 			while (resultSet.next()) {
 				SegmentPoint segmentPoint = new SegmentPoint();
 				
@@ -900,9 +898,9 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 				segmentPoint.setProgNumber(resultSet.getInt("numeroprogressivo"));
 				segmentPoint.setType(resultSet.getString("tipo").charAt(0));
 
-				segments.add(segmentPoint);
+				segment.add(segmentPoint);
 			}
-			return segments;
+			return segment;
 		} catch (IOException | ClassNotFoundException | NullPointerException e) {
 			throw new ConfigurationError(e.getMessage(), e.getCause());
 		} catch (SQLException e) {
@@ -920,11 +918,11 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 	}
 	
 	@Override
-	public ArrayList<FilamentWithBorderPoints> findBorder(String filamentName, String satelliteName) throws ConfigurationError, DataAccessError {
+	public ArrayList<BorderPointFilament> findFilamentBorder(String filamentName, String satelliteName) throws ConfigurationError, DataAccessError {
 		
 		Connection connection = null;
 		JDBCConnectionPool jdbcConnectionPool = null;
-		ArrayList<FilamentWithBorderPoints> border = new ArrayList<>();
+		ArrayList<BorderPointFilament> border = new ArrayList<>();
 		try {
 			//Si richiede una connessione al JDBCConnectionPool
 			jdbcConnectionPool = JDBCConnectionPool.getInstance();
@@ -935,16 +933,16 @@ public class JDBCFilamentsDAO implements FilamentsRepository{
 			connection.setAutoCommit(false);
 			
 			//cerco tutti i punti del bordo del filamento
-			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_BORDER);
+			PreparedStatement statement = connection.prepareStatement(QUERY_FIND_FILAMENT_BORDER);
 			statement.setString(1, filamentName);
 			statement.setString(2, satelliteName);
 			ResultSet resultSet = statement.executeQuery();
 			while(resultSet.next()) {
-				FilamentWithBorderPoints filamentsWithBorderPoints = new FilamentWithBorderPoints();
-				filamentsWithBorderPoints.setFilament(resultSet.getString("filamento"));
-				filamentsWithBorderPoints.setSatellite(resultSet.getString("satellite"));
-				filamentsWithBorderPoints.setLatitude(resultSet.getDouble("latitudine"));
-				filamentsWithBorderPoints.setLongitude(resultSet.getDouble("longitudine"));
+				BorderPointFilament filamentsWithBorderPoints = new BorderPointFilament();
+				filamentsWithBorderPoints.setFilamentName(resultSet.getString("filamento"));
+				filamentsWithBorderPoints.setSatelliteName(resultSet.getString("satellite"));
+				filamentsWithBorderPoints.setPointLatitude(resultSet.getDouble("latitudine"));
+				filamentsWithBorderPoints.setPointLongitude(resultSet.getDouble("longitudine"));
 				border.add(filamentsWithBorderPoints);
 			}
 			

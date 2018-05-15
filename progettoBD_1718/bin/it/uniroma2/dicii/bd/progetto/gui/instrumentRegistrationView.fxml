@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="window" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.dicii.bd.progetto.administration.InstrumentRegistrationController">
+   <children>
+      <Label layoutX="153.0" layoutY="78.0" text="Inserisci i dati relativi allo strumento:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="65.0" layoutY="150.0" prefHeight="20.0" prefWidth="87.0" text="Nome:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="64.0" layoutY="195.0" text="Elenco bande:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="65.0" layoutY="268.0" prefHeight="20.0" prefWidth="87.0" text="Satellite:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="name" layoutX="224.0" layoutY="148.0" onKeyTyped="#clearMessage" />
+      <TextField fx:id="listBands" layoutX="224.0" layoutY="193.0" onKeyTyped="#clearMessage" promptText="es. 3.6, 4.5, 5.8, 8.0" />
+      <ComboBox fx:id="satellite" layoutX="224.0" layoutY="265.0" prefWidth="150.0" />
+      <Button layoutX="224.0" layoutY="344.0" mnemonicParsing="false" onAction="#registerInstrument" prefHeight="44.0" prefWidth="149.0" text="Inserisci">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Label layoutX="224.0" layoutY="227.0" text="(Le bande devono essere separate da virgola)" />
+      <Label fx:id="errorMessage" layoutX="47.0" layoutY="411.0" prefHeight="17.0" prefWidth="502.0" textAlignment="CENTER" textFill="RED">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button layoutX="35.0" layoutY="27.0" mnemonicParsing="false" onAction="#gotoPreviousMenu" text="Indietro">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+   </children>
+</AnchorPane>

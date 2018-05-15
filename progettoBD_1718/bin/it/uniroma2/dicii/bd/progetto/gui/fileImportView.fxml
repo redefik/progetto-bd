@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="window" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.dicii.bd.progetto.administration.FileImportController">
+   <children>
+      <Button layoutX="41.0" layoutY="92.0" mnemonicParsing="false" onAction="#goToFilamentsImportView" prefHeight="56.0" prefWidth="519.0" text="Importa Filamenti">
+         <font>
+            <Font size="16.0" />
+         </font></Button>
+      <Button layoutX="41.0" layoutY="29.0" mnemonicParsing="false" onAction="#gotoPreviousMenu" text="Indietro">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <Button layoutX="41.0" layoutY="167.0" mnemonicParsing="false" onAction="#goToBorderPointsImportView" prefHeight="56.0" prefWidth="519.0" text="Importa Punti del contorno">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button layoutX="41.0" layoutY="244.0" mnemonicParsing="false" onAction="#goToSegmentPointsImportView" prefHeight="56.0" prefWidth="519.0" text="Importa Punti del Segmento">
+         <font>
+            <Font size="16.0" />
+         </font></Button>
+      <Button layoutX="41.0" layoutY="322.0" mnemonicParsing="false" onAction="#goToStarsImportView" prefHeight="56.0" prefWidth="519.0" text="Importa Stelle">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

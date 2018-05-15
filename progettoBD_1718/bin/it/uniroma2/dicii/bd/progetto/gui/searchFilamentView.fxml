@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="window" prefHeight="600.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141" fx:controller="it.uniroma2.dicii.bd.progetto.standardUser.SearchFilamentController">
+   <children>
+      <Button layoutX="29.0" layoutY="148.0" mnemonicParsing="false" onAction="#goToFindById" prefHeight="60.0" prefWidth="542.0" text="Ricerca per ID o Nome">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button layoutX="31.0" layoutY="30.0" mnemonicParsing="false" onAction="#gotoPreviousMenu" text="Indietro">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Label layoutX="217.0" layoutY="96.0" text="Ricerca un filamento:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button layoutX="29.0" layoutY="227.0" mnemonicParsing="false" onAction="#goToFindByContrast" prefHeight="60.0" prefWidth="542.0" text="Ricerca per Contrasto ed Ellitticità">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button layoutX="31.0" layoutY="308.0" mnemonicParsing="false" onAction="#goToFindBySegmentNumber" prefHeight="60.0" prefWidth="542.0" text="Ricerca per Numero di Segmenti">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button layoutX="31.0" layoutY="388.0" mnemonicParsing="false" onAction="#goToFindByRegion" prefHeight="60.0" prefWidth="542.0" text="Ricerca dentro una Regione">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

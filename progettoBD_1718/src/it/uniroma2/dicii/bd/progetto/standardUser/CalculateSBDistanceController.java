@@ -1,20 +1,28 @@
 package it.uniroma2.dicii.bd.progetto.standardUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.apache.log4j.Logger;
+
+import it.uniroma2.dicii.bd.progetto.administration.AdministrationSession;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ErrorType;
 import it.uniroma2.dicii.bd.progetto.errorLogic.GUIError;
-import it.uniroma2.dicii.bd.progetto.errorLogic.NotFoundError;
-import it.uniroma2.dicii.bd.progetto.filament.SegmentPoint;
+import it.uniroma2.dicii.bd.progetto.errorLogic.NotFoundBorderError;
+import it.uniroma2.dicii.bd.progetto.errorLogic.NotFoundSegmentPointError;
 import it.uniroma2.dicii.bd.progetto.gui.WindowManager;
+import it.uniroma2.dicii.bd.progetto.satellite.SatelliteBean;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
@@ -28,7 +36,7 @@ public class CalculateSBDistanceController {
 	@FXML
 	private TextField segment;
 	@FXML
-	private TextField satellite;
+	private ComboBox<SatelliteBean> satellite;
 	@FXML
 	private Label errorMessage;
 	@FXML
@@ -36,7 +44,10 @@ public class CalculateSBDistanceController {
 	
 	private boolean isTaskRunning;
 	private CalculateTask task;
+	private ArrayList<SatelliteBean> satelliteBeans = new ArrayList<>();
 	private static final String TASK_IS_RUNNING = "Attendere il completamento dell'operazione";
+	private static final String SEGMENT_NOT_FOUND = "Segmento non trovato";
+	private static final String FILAMENT_WITHOUT_SEGMENT_POINTS = "Il filamento non ha punti del segmento";
 	
 	@FXML
 	public void initialize() {
@@ -44,6 +55,21 @@ public class CalculateSBDistanceController {
 		progressIndicator.setVisible(false);
 		WindowManager.getInstance().setWindow(window);
 		errorMessage.setText("");
+		ObservableList<SatelliteBean> observableSatelliteBeans;
+	    satelliteBeans = new ArrayList<>();
+		try {
+		    satelliteBeans = AdministrationSession.getInstance().findAllSatellites();
+		    observableSatelliteBeans = FXCollections.observableArrayList(satelliteBeans);
+		    satellite.setItems(observableSatelliteBeans);
+		    satellite.setValue(satelliteBeans.get(0));
+		   
+		} catch (DataAccessError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
+		} catch (ConfigurationError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
+		}
 	}
 
 	private class ExceptionListener implements ChangeListener<Throwable> {
@@ -62,27 +88,13 @@ public class CalculateSBDistanceController {
 					errorMessage.setText("Inserire correttamente i tipi di dato");
 				} else if (exception instanceof NullPointerException) {
 					WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
-				} else if (exception instanceof NotFoundError) {
-					WindowManager.getInstance().openInfoWindow("Segmento non trovato");
+				} else if (exception instanceof NotFoundBorderError) {
+					WindowManager.getInstance().openInfoWindow(SEGMENT_NOT_FOUND);
+				} else if (exception instanceof NotFoundSegmentPointError)  {
+					WindowManager.getInstance().openInfoWindow(FILAMENT_WITHOUT_SEGMENT_POINTS);
 				}
 			}		
 		}
-	}
-
-	private class Distances {
-		private double firstMinDistance;
-		private double secondMinDistance;
-		
-		Distances () {}
-		
-		public double getFirstMinDistance() { return firstMinDistance; }
-
-		public void setFirstMinDistance(double firstMinDistance) { this.firstMinDistance = firstMinDistance; }
-
-		public double getSecondMinDistance() { return secondMinDistance; }
-
-		public void setSecondMinDistance(double secondMinDistance) { this.secondMinDistance = secondMinDistance; }
-
 	}
 	
 	private class TaskReturnHandler implements EventHandler<WorkerStateEvent>{
@@ -90,43 +102,30 @@ public class CalculateSBDistanceController {
 		@Override
 		public void handle(WorkerStateEvent event) {
 			progressIndicator.setVisible(false);
-			Distances distances = task.getValue();
-			System.out.println(distances.getFirstMinDistance());
-			WindowManager.getInstance().openInfoWindow("Distanza minima dal primo estremo: " + distances.getFirstMinDistance() 
-					+ "\nDistanza minima dal secondo estremo: " + distances.getSecondMinDistance());
+			HashMap<String,Double> distances = task.getValue();
+			WindowManager.getInstance().openInfoWindow("Distanza minima dal primo estremo: " + distances.get("firstMinDinstance") 
+					+ "\nDistanza minima dal secondo estremo: " + distances.get("secondMinDistance"));
 			isTaskRunning = false;
 		}
 		
 	}
 
-	private class CalculateTask extends Task<Distances> {
+	private class CalculateTask extends Task<HashMap<String,Double>> {
 
 		@Override
-		protected Distances call() throws ConfigurationError, DataAccessError, NotFoundError {
+		protected HashMap<String,Double> call() throws ConfigurationError, DataAccessError, NotFoundBorderError, NotFoundSegmentPointError {
 			isTaskRunning = true;
-			Distances distances = new Distances();
+			// uso un HashMap che contiene le distanze minime tra i due estremi del segmento e i punti del contorno
+			HashMap<String,Double> distances = new HashMap<>(); 
 			updateProgress(-1, 1);
 			int idSegment = Integer.parseInt(segment.getText());
 			String filamentName = filament.getText();
-			String satelliteName = satellite.getText();
-			ArrayList<SegmentPoint> segment = new ArrayList<>();
-			segment = StandardUserSession.getInstance().findSegment(filamentName,idSegment);
-			
-			SegmentPoint begin = new SegmentPoint();
-			begin = StandardUserSession.getInstance().getFirst(segment);
-			SegmentPoint end = new SegmentPoint();
-			end = StandardUserSession.getInstance().getLast(segment);
-			
-			if(begin!=null && end!=null) {			
-				double firstMinDinstance = StandardUserSession.getInstance().misureMinDinstance(begin,satelliteName);
-				double secondMinDistance = StandardUserSession.getInstance().misureMinDinstance(end,satelliteName);
-				distances.setFirstMinDistance(firstMinDinstance);
-				distances.setSecondMinDistance(secondMinDistance);
-				return distances;
-				}
+			String satelliteName = satellite.getSelectionModel().getSelectedItem().getName();
+
+			distances = StandardUserSession.getInstance().calculateMinDistanceFromSegmentToBorder(filamentName, idSegment, satelliteName);
 
 			updateProgress(1, 1);
-			return null;			
+			return distances;			
 		}
 	}
 
@@ -135,6 +134,7 @@ public class CalculateSBDistanceController {
 			WindowManager.getInstance().openInfoWindow(TASK_IS_RUNNING);
 			return;
 		}
+		errorMessage.setText("");
 		progressIndicator.setVisible(true);
 		// l'operazione, che risulta costosa, viene collocata su un thread separato da quello responsabile del disegno della GUI
 		task = new CalculateTask();

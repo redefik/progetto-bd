@@ -41,20 +41,21 @@ public class SearchFilamentByRegionController {
 	@FXML
 	private ProgressIndicator progressIndicator;
 	@FXML
-	private Button show;
-	
+	private Button showFilamentsInATable;
+
 	private boolean isTaskRunning;
+	private String chosenShape;
 	private ArrayList<FilamentBean> filamentBeans;
 	private ArrayList<String> shapes;
 	private double galacticLatitude;
 	private double galacticLongitude;
 	private double lenght;
 	private static final String TASK_IS_RUNNING = "Attendere il completamento dell'operazione";
-	private static final String TABLE_VIEW = "../gui/tableFilamentsView.fxml";
+	private static final String GO_TO_TABLE_VIEW = "../gui/tableFilamentsView.fxml";
 
 	@FXML
 	public void initialize(){
-		show.setVisible(false);
+		showFilamentsInATable.setVisible(false);
 		isTaskRunning = false;
 		progressIndicator.setVisible(false);
 		WindowManager.getInstance().setWindow(window);
@@ -75,6 +76,7 @@ public class SearchFilamentByRegionController {
 			WindowManager.getInstance().openInfoWindow(TASK_IS_RUNNING);
 			return;
 		}
+		clearMessage();
 		progressIndicator.setVisible(true);
 		// l'operazione, che risulta costosa, viene collocata su un thread separato da quello responsabile del disegno della GUI
 		SearchByRegionTask task = new SearchByRegionTask();
@@ -118,58 +120,31 @@ public class SearchFilamentByRegionController {
 			galacticLatitude = Double.parseDouble(latitude.getText());
 			galacticLongitude = Double.parseDouble(longitude.getText());
 			lenght = Double.parseDouble(size.getText());
-			if(shape.getSelectionModel().getSelectedItem()=="CERCHIO") {
-				filamentBeans = findByCircle(galacticLongitude,galacticLatitude,lenght);
-			} else {
-				filamentBeans = findBySquare(galacticLongitude,galacticLatitude,lenght);
-			}
-			System.out.println(filamentBeans.get(0).getNumberOfSegments());
+			chosenShape = shape.getSelectionModel().getSelectedItem();
+			
+			// trovo tutti i filamenti in una regione circolare o quadrata, in base alla scelta fatta
+			filamentBeans = StandardUserSession.getInstance().findFilamentsInARegion(galacticLongitude,galacticLatitude,lenght,chosenShape);
+			
 			updateProgress(1, 1);
 			isTaskRunning = false;
-			show.setVisible(true);
+			showFilamentsInATable.setVisible(true);
 			return null;
 		}
-		
 	}
 
+	// La funzione fa aprire una tabella con i risultati appena ottenuti
 	public void showFilaments() {
 		try {
 			TableFilamentsController.setFilaments(filamentBeans);
-			WindowManager.getInstance().openWindow(TABLE_VIEW);
+			WindowManager.getInstance().openWindow(GO_TO_TABLE_VIEW);
+			showFilamentsInATable.setVisible(false);
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
 		}	
 	}
 
-	private ArrayList<FilamentBean> findByCircle(double centreX, double centreY, double radius) {
-		ArrayList<FilamentBean> filamentBeans = new ArrayList<>();
-		try {
-			filamentBeans = StandardUserSession.getInstance().findByCircle(centreX,centreY,radius);
-		} catch (ConfigurationError e) {
-			Logger.getLogger(getClass()).error(e.getMessage(), e);
-			WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
-		} catch (DataAccessError e) {
-			Logger.getLogger(getClass()).error(e.getMessage(), e);
-			WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
-		}
-		return filamentBeans;
-	}
-
-	private ArrayList<FilamentBean> findBySquare(double centreX, double centreY, double side) {
-		ArrayList<FilamentBean> filamentBeans = new ArrayList<>();
-		try {
-			filamentBeans = StandardUserSession.getInstance().findBySquare(centreX,centreY,side);
-		} catch (ConfigurationError e) {
-			Logger.getLogger(getClass()).error(e.getMessage(), e);
-			WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
-		} catch (DataAccessError e) {
-			Logger.getLogger(getClass()).error(e.getMessage(), e);
-			WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
-		}
-		return filamentBeans;
-	}
-
+	// La funzione cambia scrive raggio o lato in base al fatto se è stato scelto cerchio o quadrato
 	@FXML
 	public void changeLenghtLabel() {
 		if(shape.getSelectionModel().getSelectedItem()=="CERCHIO") {

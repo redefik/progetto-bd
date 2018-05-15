@@ -8,7 +8,8 @@ public class BorderPointFilament {
 	private String filamentName;
 	private String satelliteName;
 	
-	
+	public BorderPointFilament() {}
+
 	public BorderPointFilament(double pointLatitude, double pointLongitude, String filamentName,
 			String satelliteName) {
 		this.pointLatitude = pointLatitude;
@@ -20,6 +21,26 @@ public class BorderPointFilament {
 
 	public double getPointLatitude() {
 		return pointLatitude;
+	}
+
+
+	public void setPointLatitude(double pointLatitude) {
+		this.pointLatitude = pointLatitude;
+	}
+
+
+	public void setPointLongitude(double pointLongitude) {
+		this.pointLongitude = pointLongitude;
+	}
+
+
+	public void setFilamentName(String filamentName) {
+		this.filamentName = filamentName;
+	}
+
+
+	public void setSatelliteName(String satelliteName) {
+		this.satelliteName = satelliteName;
 	}
 
 

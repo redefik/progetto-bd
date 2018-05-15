@@ -8,7 +8,6 @@ import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
 import it.uniroma2.dicii.bd.progetto.filament.BorderPoint;
 import it.uniroma2.dicii.bd.progetto.filament.BorderPointFilament;
 import it.uniroma2.dicii.bd.progetto.filament.Filament;
-import it.uniroma2.dicii.bd.progetto.filament.FilamentWithBorderPoints;
 import it.uniroma2.dicii.bd.progetto.filament.SegmentPoint;
 import it.uniroma2.dicii.bd.progetto.filament.SegmentPointImported;
 import it.uniroma2.dicii.bd.progetto.satellite.InstrumentBean;
@@ -45,15 +44,15 @@ public interface FilamentsRepository {
 
 	ArrayList<Filament> findFilamentByNumOfSegments(int minNum, int maxNum) throws ConfigurationError, DataAccessError;
 
-	ArrayList<FilamentWithBorderPoints> findFilamentsWithBorderPointsInSquare(double x0, double x1, double y0,
+	ArrayList<BorderPointFilament> findFilamentsWithBorderPointsInSquare(double x0, double x1, double y0,
 			double y1) throws ConfigurationError, DataAccessError;
 
-	Filament findFilament(FilamentWithBorderPoints filamentWithBorderPoints) throws DataAccessError, ConfigurationError;
+	ArrayList<SegmentPoint> findSegmentBySatelliteNameAndId(String filamentName, int idSegment) throws DataAccessError, ConfigurationError;
 
-	ArrayList<SegmentPoint> findSegment(String filamentName, int idSegment) throws DataAccessError, ConfigurationError;
-
-	ArrayList<FilamentWithBorderPoints> findBorder(String filamentName, String satelliteName)
+	ArrayList<BorderPointFilament> findFilamentBorder(String filamentName, String satelliteName)
 			throws ConfigurationError, DataAccessError;
+
+	Filament findFilamentByBorderPoints(BorderPointFilament filamentWithBorderPoints) throws DataAccessError, ConfigurationError;
 
 
 }
