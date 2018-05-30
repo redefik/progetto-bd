@@ -13,4 +13,6 @@ public interface StarsRepository {
 	ArrayList<Star> findAllStars() throws ConfigurationError, DataAccessError;
 
 	ArrayList<Star> findAllStarIntoRegion(double latitude, double longitude, double width, double heigth) throws ConfigurationError, DataAccessError;
+
+	void deleteStar(String starName) throws DataAccessError, ConfigurationError;
 }

@@ -68,6 +68,23 @@ public class UserBean {
 		this.mail = mail;
 	}
 	
-	
+	@Override
+	public boolean equals(Object otherObject) {
+		if (otherObject == null) {
+			return false;
+		}
+		if (this == otherObject) {
+			return true;
+		}
+		if (getClass() != otherObject.getClass()) {
+			return false;
+		}
+		UserBean otherUser = (UserBean) otherObject;
+		boolean equalityCondition = 
+				otherUser.getUsername().equals(this.username) && otherUser.getFirstName().equals(this.firstName) &&
+				otherUser.getLastName().equals(this.lastName) && otherUser.getMail().equals(this.mail) &&
+				otherUser.getPassword().equals(this.password) && otherUser.getType() == this.type;
+		return equalityCondition;
+	}
 	
 }

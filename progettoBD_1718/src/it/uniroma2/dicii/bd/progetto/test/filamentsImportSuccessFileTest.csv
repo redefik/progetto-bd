@@ -1,0 +1,3 @@
+IDFIL,NAME,TOTAL_FLUX,MEAN_DENS,MEAN_TEMP,ELLIPTICITY,CONTRAST,SATELLITE,INSTRUMENT
+1,filamentA,0,0,0,3.4,3.3,satelliteTest,instrumentTest
+2,filamentB,0,0,0,4.5,32,satelliteTest,instrumentTest

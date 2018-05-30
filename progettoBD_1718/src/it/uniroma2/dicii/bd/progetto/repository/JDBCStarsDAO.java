@@ -18,6 +18,7 @@ public class JDBCStarsDAO implements StarsRepository {
 	private static final String FIND_ALL_STAR_QUERY = "SELECT * FROM STELLA";
 	private static final String QUERY_SEARCH_STARS__INTO_REGION = "SELECT * FROM STELLA WHERE "
 								+ "LATITUDINE <= ? AND LATITUDINE >= ? AND LONGITUDINE <= ? AND LONGITUDINE >= ?";
+	private static final String QUERY_DELETE_STAR = "DELETE FROM STELLA WHERE NOME = ?";
 
 	@Override
 	public void insertAllStars(ArrayList<Star> stars) throws ConfigurationError, DataAccessError, BatchError {
@@ -201,4 +202,38 @@ public class JDBCStarsDAO implements StarsRepository {
 		}
 	}
 	
+	@Override
+	public void deleteStar(String starName) throws DataAccessError, ConfigurationError {
+		
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		
+		try {
+			//Si richiede una connessione al JDBCConnectionPool
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			
+			PreparedStatement statement = connection.prepareStatement(QUERY_DELETE_STAR);
+			statement.setString(1, starName);
+	
+			//Se la cancellazione fallisce viene sollevata un eccezione
+			if (statement.executeUpdate() != 1) {
+				throw new DataAccessError(DataAccessError.DELETE_FAILED);
+			}
+			
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="592.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.uniroma2.dicii.bd.progetto.standardUser.TableSFDistanceController">
+   <children>
+      <TableView fx:id="tableStarBeanWithMinDistance" layoutX="130.0" layoutY="150.0" prefHeight="540.0" prefWidth="600.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columns>
+            <TableColumn fx:id="columnStarName" prefWidth="208.0" text="Nome" />
+          <TableColumn fx:id="columnStarFlow" prefWidth="186.0" text="Flusso" />
+          <TableColumn fx:id="columnMinDistance" prefWidth="195.0" text="Distanza" />
+        </columns>
+      </TableView>
+      <Button fx:id="nextStarBeanWithMinDistance" layoutX="464.0" layoutY="550.0" mnemonicParsing="false" onAction="#visualizeNextStarBeanWithMinDistance" prefHeight="36.0" prefWidth="122.0" text="Successivo">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="previousStarBeanWithMinDistance" layoutX="316.0" layoutY="550.0" mnemonicParsing="false" onAction="#visualizePreviousStarBeanWithMinDistance" prefHeight="36.0" prefWidth="122.0" text="Precedente">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

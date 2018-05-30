@@ -22,5 +22,9 @@ public interface SatellitesRepository {
 	void persistInstrument(Instrument instrument, String satellite) throws ConfigurationError, DataAccessError;
 
 	ArrayList<Instrument> findAllInstruments() throws ConfigurationError, DataAccessError;
+
+	void deleteInstrument(String instrumentName) throws DataAccessError, ConfigurationError;
+
+	void deleteSatellite(String satelliteName) throws DataAccessError, ConfigurationError;
 	
 }

@@ -49,6 +49,7 @@ public class MainController {
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+			gotoPreviousMenu();
 		}
 	}
 
@@ -58,6 +59,7 @@ public class MainController {
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+			gotoPreviousMenu();
 		}
 	}
 
@@ -67,6 +69,7 @@ public class MainController {
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+			gotoPreviousMenu();
 		}
 	}
 
@@ -76,12 +79,23 @@ public class MainController {
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+			gotoPreviousMenu();
 		}
 	}
 
 	public void goToCalculateSFDistance() {
 		try {
 			WindowManager.getInstance().changeMenu(CALCULATE_SF_DISTANCE_MENU);
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+			gotoPreviousMenu();
+		}
+	}
+	
+	public void gotoPreviousMenu() {
+		try {
+			WindowManager.getInstance().goToPreviousMenu();
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);

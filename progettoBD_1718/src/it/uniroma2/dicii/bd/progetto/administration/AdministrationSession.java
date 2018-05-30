@@ -22,7 +22,6 @@ import it.uniroma2.dicii.bd.progetto.satellite.Instrument;
 import it.uniroma2.dicii.bd.progetto.satellite.InstrumentBean;
 import it.uniroma2.dicii.bd.progetto.satellite.Satellite;
 import it.uniroma2.dicii.bd.progetto.satellite.SatelliteBean;
-import it.uniroma2.dicii.bd.progetto.satellite.SelectableAgencyBean;
 import it.uniroma2.dicii.bd.progetto.star.Star;
 import it.uniroma2.dicii.bd.progetto.star.StarBean;
 import it.uniroma2.dicii.bd.progetto.user.User;
@@ -79,10 +78,10 @@ public class AdministrationSession {
 	   }
 
 	   // Il metodo delega a un oggetto satellitesRepository l'inserimento di un nuovo satellite 
-	   public void registerSatellite(SatelliteBean satelliteBean, ArrayList<SelectableAgencyBean> selectedAgencies) throws ConfigurationError, DataAccessError {
+	   public void registerSatellite(SatelliteBean satelliteBean, ArrayList<AgencyBean> selectedAgencies) throws ConfigurationError, DataAccessError {
 			Satellite satellite = new Satellite(satelliteBean);
 			ArrayList<Agency> agencies = new ArrayList<Agency>();
-			for (SelectableAgencyBean elem : selectedAgencies) {
+			for (AgencyBean elem : selectedAgencies) {
 				agencies.add(new Agency(elem.getName()));
 			}
 			

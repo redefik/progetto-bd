@@ -48,6 +48,7 @@ public class CalculateSBDistanceController {
 	private static final String TASK_IS_RUNNING = "Attendere il completamento dell'operazione";
 	private static final String SEGMENT_NOT_FOUND = "Segmento non trovato";
 	private static final String FILAMENT_WITHOUT_SEGMENT_POINTS = "Il filamento non ha punti del segmento";
+	private static final String NOT_VALID_INPUT= "Inserire dati validi nei campi";
 	
 	@FXML
 	public void initialize() {
@@ -61,7 +62,9 @@ public class CalculateSBDistanceController {
 		    satelliteBeans = AdministrationSession.getInstance().findAllSatellites();
 		    observableSatelliteBeans = FXCollections.observableArrayList(satelliteBeans);
 		    satellite.setItems(observableSatelliteBeans);
-		    satellite.setValue(satelliteBeans.get(0));
+		    if(!satelliteBeans.isEmpty()) {
+		    	satellite.setValue(satelliteBeans.get(0));
+		    }
 		   
 		} catch (DataAccessError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
@@ -85,7 +88,7 @@ public class CalculateSBDistanceController {
 				} else if (exception instanceof DataAccessError) {
 					WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
 				} else if (exception instanceof NumberFormatException) {
-					errorMessage.setText("Inserire correttamente i tipi di dato");
+					errorMessage.setText(NOT_VALID_INPUT);
 				} else if (exception instanceof NullPointerException) {
 					WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
 				} else if (exception instanceof NotFoundBorderError) {
@@ -97,6 +100,7 @@ public class CalculateSBDistanceController {
 		}
 	}
 	
+	// l'handler intercetta l'oggetto ritornato dal task
 	private class TaskReturnHandler implements EventHandler<WorkerStateEvent>{
 
 		@Override
@@ -148,26 +152,6 @@ public class CalculateSBDistanceController {
 		taskThread.setDaemon(true);
 		taskThread.start();	
 	}
-	
-	/*
-	public void calculate() throws ConfigurationError, DataAccessError {
-		int idSegment = Integer.parseInt(segment.getText());
-		String filamentName = filament.getText();
-		String satelliteName = satellite.getText();
-		ArrayList<SegmentPoint> segment = new ArrayList<>();
-		segment = StandardUserSession.getInstance().findSegment(filamentName,idSegment);
-		SegmentPoint begin = StandardUserSession.getInstance().getFirst(segment);
-		SegmentPoint end = StandardUserSession.getInstance().getLast(segment);
-		if(begin!=null && end!=null) {
-			double firstMinDinstance = StandardUserSession.getInstance().misureMinDinstance(begin,satelliteName);
-			double secondMinDistance = StandardUserSession.getInstance().misureMinDinstance(end,satelliteName);
-			WindowManager.getInstance().openInfoWindow("Prima distanza minima: " + firstMinDinstance 
-					+ "\nSeconda distanza minima: " + secondMinDistance + "\n");
-		} else {
-			errorMessage.setText("Segmento non trovato");
-		}
-	}
-	*/
 
 	public void gotoPreviousMenu() {
 		if (isTaskRunning) {

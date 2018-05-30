@@ -8,6 +8,15 @@ public class Filament {
 	private double contrast;
 	private String instrumentName;
 	
+	public Filament(String name, int number, int numberOfSegments, double ellipticity, double contrast, String instrumentName) {
+		this.name = name;
+		this.number = number;
+		this.numberOfSegments = numberOfSegments;
+		this.ellipticity = ellipticity;
+		this.contrast = contrast;
+		this.instrumentName = instrumentName;
+	}
+	
 	public Filament(FilamentBean filamentBean) {
 		this.name = filamentBean.getName();
 		this.number = filamentBean.getNumber();

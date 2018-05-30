@@ -26,6 +26,9 @@ public class JDBCSatelliteDAO implements SatellitesRepository {
 	private static final String QUERY_INSERT_AGENCY_SATELLITE = "INSERT INTO AGENZIASATELLITE VALUES (?,?)";
 	private static final String QUERY_SEARCH_SATELLITE = "SELECT * FROM SATELLITE WHERE NOME = ?";
 	private static final String QUERY_INSERT_INSTRUMENT = "INSERT INTO STRUMENTO VALUES(?,?,?)";
+	private static final String QUERY_DELETE_INSTRUMENT = "DELETE FROM STRUMENTO WHERE NOME = ?";
+	private static final String QUERY_DELETE_SATELLITE = "DELETE FROM SATELLITE WHERE NOME = ?";
+	private static final String QUERY_DELETE_AGENCY_SATELLITE = "DELETE FROM AGENZIASATELLITE WHERE SATELLITE = ?";
 	
 	public ArrayList<Agency> findAllAgencies() throws ConfigurationError, DataAccessError{
 		
@@ -317,6 +320,86 @@ public class JDBCSatelliteDAO implements SatellitesRepository {
 				instruments.add(instrument);
 			}
 			return instruments;
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void deleteInstrument(String instrumentName) throws DataAccessError, ConfigurationError {
+		
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		
+		try {
+			//Si richiede una connessione al JDBCConnectionPool
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			
+			PreparedStatement statement = connection.prepareStatement(QUERY_DELETE_INSTRUMENT);
+			statement.setString(1, instrumentName);
+	
+			//Se la cancellazione fallisce viene sollevata un eccezione
+			if (statement.executeUpdate() != 1) {
+				throw new DataAccessError(DataAccessError.DELETE_FAILED);
+			}
+			
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		} finally {
+			// Si restituisce la connessione al JDBCConnectionPool
+			if (jdbcConnectionPool != null) {
+				try {
+					jdbcConnectionPool.releaseConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void deleteSatellite(String satelliteName) throws DataAccessError, ConfigurationError {
+		
+		Connection connection = null;
+		JDBCConnectionPool jdbcConnectionPool = null;
+		
+		try {
+			//Si richiede una connessione al JDBCConnectionPool
+			jdbcConnectionPool = JDBCConnectionPool.getInstance();
+			connection = jdbcConnectionPool.getConnection();
+			
+			PreparedStatement statement;
+			
+			statement = connection.prepareStatement(QUERY_DELETE_AGENCY_SATELLITE);
+			statement.setString(1, satelliteName);
+			
+			//Se la cancellazione fallisce viene sollevata un eccezione
+			if (statement.executeUpdate() < 1) {
+				throw new DataAccessError(DataAccessError.DELETE_FAILED);
+			}
+			
+			statement = connection.prepareStatement(QUERY_DELETE_SATELLITE);
+			statement.setString(1, satelliteName);
+	
+			//Se la cancellazione fallisce viene sollevata un eccezione
+			if (statement.executeUpdate() != 1) {
+				throw new DataAccessError(DataAccessError.DELETE_FAILED);
+			}
+			
 		} catch (IOException | ClassNotFoundException | NullPointerException e) {
 			throw new ConfigurationError(e.getMessage(), e.getCause());
 		} catch (SQLException e) {

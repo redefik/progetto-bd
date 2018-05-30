@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.2" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="it.uniroma2.dicii.bd.progetto.repository.JDBCFilamentsDAO" 
+    project="progettoBD_1718" file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/JDBCFilamentsDAO.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="988" width="618" x="782" y="-230"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="it.uniroma2.dicii.bd.progetto.repository.FilamentsRepositoryFactory" 
+    project="progettoBD_1718" 
+    file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/FilamentsRepositoryFactory.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="160" width="312" x="161" y="-230"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="3" language="java" name="it.uniroma2.dicii.bd.progetto.repository.DBType" project="progettoBD_1718" 
+    file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/DBType.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="124" width="219" x="523" y="-230"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <interface id="4" language="java" name="it.uniroma2.dicii.bd.progetto.repository.SatellitesRepository" 
+    project="progettoBD_1718" 
+    file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/SatellitesRepository.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="232" width="366" x="3511" y="798"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="5" language="java" name="it.uniroma2.dicii.bd.progetto.repository.JDBCStarsDAO" project="progettoBD_1718" 
+    file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/JDBCStarsDAO.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="232" width="414" x="2435" y="-230"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="6" language="java" name="it.uniroma2.dicii.bd.progetto.repository.FilamentsRepository" 
+    project="progettoBD_1718" 
+    file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/FilamentsRepository.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="448" width="618" x="782" y="798"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="7" language="java" name="it.uniroma2.dicii.bd.progetto.repository.SatellitesRepositoryFactory" 
+    project="progettoBD_1718" 
+    file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/SatellitesRepositoryFactory.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="160" width="306" x="1440" y="-230"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="it.uniroma2.dicii.bd.progetto.repository.JDBCConnectionPool" 
+    project="progettoBD_1718" 
+    file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/JDBCConnectionPool.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="340" width="268" x="1796" y="-230"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="it.uniroma2.dicii.bd.progetto.repository.JDBCSatelliteDAO" 
+    project="progettoBD_1718" file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/JDBCSatelliteDAO.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="448" width="366" x="3511" y="-230"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="10" language="java" name="it.uniroma2.dicii.bd.progetto.repository.UsersRepository" 
+    project="progettoBD_1718" file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/UsersRepository.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="142" width="312" x="3917" y="798"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="11" language="java" name="it.uniroma2.dicii.bd.progetto.repository.UsersRepositoryFactory" 
+    project="progettoBD_1718" 
+    file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/UsersRepositoryFactory.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="160" width="271" x="2114" y="-230"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="it.uniroma2.dicii.bd.progetto.repository.JDBCConnectionManager" 
+    project="progettoBD_1718" 
+    file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/JDBCConnectionManager.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="322" width="254" x="2889" y="-230"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="13" language="java" name="it.uniroma2.dicii.bd.progetto.repository.StarsRepository" 
+    project="progettoBD_1718" file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/StarsRepository.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="142" width="414" x="2435" y="798"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="14" language="java" name="it.uniroma2.dicii.bd.progetto.repository.StarsRepositoryFactory" 
+    project="progettoBD_1718" 
+    file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/StarsRepositoryFactory.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="160" width="268" x="3193" y="-230"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="it.uniroma2.dicii.bd.progetto.repository.JDBCUserDAO" project="progettoBD_1718" 
+    file="/progettoBD_1718/src/it/uniroma2/dicii/bd/progetto/repository/JDBCUserDAO.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="232" width="312" x="3917" y="-230"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <realization id="16">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="13"/>  
+  </realization>  
+  <realization id="17">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <realization id="18">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="10"/>  
+  </realization>  
+  <association id="19">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="20" name="instance"/>      
+      <multiplicity id="21" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="22">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="23" name="instance"/>      
+      <multiplicity id="24" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="25">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="26" name="instance"/>      
+      <multiplicity id="27" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="28">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="29" name="instance"/>      
+      <multiplicity id="30" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="31">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
+  <association id="32">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="33" name="instance"/>      
+      <multiplicity id="34" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="35">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="36" name="instance"/>      
+      <multiplicity id="37" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

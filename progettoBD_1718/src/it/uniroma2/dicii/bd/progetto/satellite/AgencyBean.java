@@ -6,6 +6,10 @@ public class AgencyBean {
 	
 	public AgencyBean() {}
 	
+	public AgencyBean(String name) {
+		this.name = name;
+	}
+	
 	public AgencyBean(Agency agency) {
 		this.name = agency.getName();
 	}

@@ -61,6 +61,7 @@ public class LoginController {
 		} catch(GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+			gotoPreviousMenu();
 		}
 		
 	}
@@ -68,5 +69,14 @@ public class LoginController {
 	// Elimina il messaggio di errore non appena l'utente riprova a inserire username o password
 	public void clearLabel() {
 		errorMessage.setVisible(false);
+	}
+	
+	public void gotoPreviousMenu() {
+		try {
+			WindowManager.getInstance().goToPreviousMenu();
+		} catch (GUIError e) {
+			Logger.getLogger(getClass()).error(e.getMessage(), e);
+			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+		}
 	}
 }

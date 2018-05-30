@@ -13,4 +13,6 @@ public interface UsersRepository {
 	
 	void persist(User user) throws ConfigurationError, DataAccessError;
 
+	void deleteUserWithUsername(String username) throws ConfigurationError, DataAccessError;
+
 }

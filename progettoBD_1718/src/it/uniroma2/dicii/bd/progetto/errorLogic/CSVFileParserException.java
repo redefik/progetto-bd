@@ -4,6 +4,8 @@ package it.uniroma2.dicii.bd.progetto.errorLogic;
 //e.g.: campi non validi, tipi non conformi...
 
 public class CSVFileParserException extends Exception {
+	
+	private static final long serialVersionUID = 1L;
 
 	public CSVFileParserException (String message, Throwable cause) {
 		super(message, cause);

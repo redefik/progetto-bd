@@ -22,9 +22,9 @@ public class InstrumentRegistrationController {
 	private static final String NOT_INSERTED_NAME = "Inserire il nome per lo strumento.";
 	private static final String NOT_VALID_LISTBANDS = "Inserire l'elenco di bande nel formato corretto.";
 	private static final String INSERT_CONFIRMED = "Inserimento dello strumento effettuato con successo.";
-	private static final String ADMINISTRATION_MENU = "../gui/administrationView.fxml";
 	private static final String INVALID_NAME_MESSAGE = "Lo strumento specificato è già presente per il satellite selezionato.";
-
+	private static final String SATELLITE_NOT_FOUND = "Inserire un satellite prima di procedere con l'inserimento di strumenti.";
+	
 	@FXML
 	private AnchorPane window;
 	
@@ -50,6 +50,11 @@ public class InstrumentRegistrationController {
 		try {
 			String instrumentName;
 			String instrumentListBands;
+			
+			if (satelliteBeans.isEmpty()) {
+				errorMessage.setText(SATELLITE_NOT_FOUND);
+				return;
+			}
 			
 			// Se l'utente non ha inserito un nome per lo strumento che vuole inserire si mostra un messaggio di errore
 			if (name.getText().equals("")) {
@@ -80,8 +85,8 @@ public class InstrumentRegistrationController {
 			AdministrationSession.getInstance().registerInstrument(satellite.getSelectionModel().getSelectedItem(), instrumentBean);
 	        
 	        WindowManager.getInstance().openInfoWindow(INSERT_CONFIRMED);
-			WindowManager.getInstance().changeMenu(ADMINISTRATION_MENU);
-		
+	        gotoPreviousMenu();
+	        
 		} catch (DataAccessError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
@@ -89,9 +94,6 @@ public class InstrumentRegistrationController {
 		} catch (ConfigurationError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
-		} catch (GUIError e) {
-			Logger.getLogger(getClass()).error(e.getMessage(), e);
-			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
 		}
 	}
 	
@@ -128,6 +130,10 @@ public class InstrumentRegistrationController {
 			ObservableList<SatelliteBean> observableSatelliteBeans;
 	        satelliteBeans = new ArrayList<>();
 	        satelliteBeans = AdministrationSession.getInstance().findAllSatellites();
+	        if (satelliteBeans.isEmpty()) {
+	        	WindowManager.getInstance().openInfoWindow(SATELLITE_NOT_FOUND);
+	        	return;
+	        }
 	        observableSatelliteBeans = FXCollections.observableArrayList(satelliteBeans);
 	        satellite.setItems(observableSatelliteBeans);
 	        satellite.setValue(satelliteBeans.get(0));

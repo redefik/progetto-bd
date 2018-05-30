@@ -14,6 +14,7 @@ public class JDBCUserDAO implements UsersRepository {
 	private static final String QUERY_SEARCH_USER = "SELECT * FROM UTENTI WHERE USERNAME = ? AND PASSWORD = ?";
 	private static final String QUERY_SEARCH_USERNAME = "SELECT * FROM UTENTI WHERE USERNAME = ?";
 	private static final String QUERY_INSERT_USER = "INSERT INTO UTENTI VALUES (?,?,?,?,?,?)";
+	private static final String QUERY_DELETE_USER_USERNAME = "DELETE FROM UTENTI WHERE USERNAME = ?";
 
 	@Override
 	public User findByUsernameAndPassword(String username, String password) throws ConfigurationError, DataAccessError {
@@ -109,6 +110,39 @@ public class JDBCUserDAO implements UsersRepository {
 			}
 			
 			
+		} catch (IOException | ClassNotFoundException | NullPointerException e) {
+			throw new ConfigurationError(e.getMessage(), e.getCause());
+		} catch (SQLException e) {
+			throw new DataAccessError(e.getMessage(), e.getCause());
+		
+		} finally {
+			if (connection != null && connectionManager != null) {
+				try {
+					connectionManager.closeConnection(connection);
+				} catch (SQLException e) {
+					throw new DataAccessError(e.getMessage(), e.getCause());
+				}
+			}
+		}
+	}
+	@Override
+	public void deleteUserWithUsername(String username) throws ConfigurationError, DataAccessError {
+
+		Connection connection = null;
+		JDBCConnectionManager connectionManager = null;
+		
+		try {
+			
+			connectionManager = JDBCConnectionManager.getInstance();
+			connection = connectionManager.openConnection(DBType.DB_USER);
+			PreparedStatement statement = connection.prepareStatement(QUERY_DELETE_USER_USERNAME);
+			statement.setString(1, username);
+						
+			// Si verifica che la cancellazione sia stato realmente effettuato
+			if (statement.executeUpdate() != 1) {
+				throw new DataAccessError(DataAccessError.DELETE_FAILED);
+			}
+				
 		} catch (IOException | ClassNotFoundException | NullPointerException e) {
 			throw new ConfigurationError(e.getMessage(), e.getCause());
 		} catch (SQLException e) {

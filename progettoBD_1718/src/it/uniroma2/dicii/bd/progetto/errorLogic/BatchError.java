@@ -4,6 +4,8 @@ package it.uniroma2.dicii.bd.progetto.errorLogic;
 //e.g.: duplicazione di chiavi, vincoli di integrità violati...
 
 public class BatchError extends Exception {
+	
+	private static final long serialVersionUID = 1L;
 
 	public BatchError(String message, Throwable cause) {
 		super(message, cause);

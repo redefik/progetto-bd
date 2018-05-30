@@ -6,10 +6,13 @@ import java.util.Map;
 import java.lang.Math;
 import it.uniroma2.dicii.bd.progetto.errorLogic.ConfigurationError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.DataAccessError;
+import it.uniroma2.dicii.bd.progetto.errorLogic.FilamentWithoutStarsError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.InvalidBrightnessError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.InvalidEllipticityError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.InvalidNumOfSegmentsError;
+import it.uniroma2.dicii.bd.progetto.errorLogic.NotFoundBackBoneError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.NotFoundBorderError;
+import it.uniroma2.dicii.bd.progetto.errorLogic.NotFoundFilamentError;
 import it.uniroma2.dicii.bd.progetto.errorLogic.NotFoundSegmentPointError;
 import it.uniroma2.dicii.bd.progetto.filament.BorderPoint;
 import it.uniroma2.dicii.bd.progetto.filament.BorderPointFilament;
@@ -28,6 +31,7 @@ import it.uniroma2.dicii.bd.progetto.satellite.Instrument;
 import it.uniroma2.dicii.bd.progetto.satellite.InstrumentBean;
 import it.uniroma2.dicii.bd.progetto.star.Star;
 import it.uniroma2.dicii.bd.progetto.star.StarBean;
+import it.uniroma2.dicii.bd.progetto.star.StarBeanWithMinDistance;
 import it.uniroma2.dicii.bd.progetto.star.StarsIntoRegion;
 
 public class StandardUserSession {
@@ -322,63 +326,37 @@ public class StandardUserSession {
 			ArrayList<FilamentBean> filamentBeans = new ArrayList<>();
 			if(chosenShape =="CERCHIO") {
 				filamentBeans = findFilamentByCircle(galacticLongitude,galacticLatitude,lenght);
-			} else {
+			} else if(chosenShape =="QUADRATO") {
 				filamentBeans = findFilamentBySquare(galacticLongitude,galacticLatitude,lenght);
 			}
 			return filamentBeans;
 		}
 		
-		// La funzione restituisce la distanza minima tra gli estremi del segmento e i punti del contorno
-		public HashMap<String,Double> calculateMinDistanceFromSegmentToBorder(String filamentName, int idSegment, String satelliteName) throws NotFoundSegmentPointError, ConfigurationError, DataAccessError, NotFoundBorderError {
-			HashMap<String,Double> distances = new HashMap<>();
-			ArrayList<SegmentPoint> segment = new ArrayList<>();
-			segment = findSegmentBySatelliteNameAndId(filamentName,idSegment);
-			
-			// Se il filamento non ha punti del segmento si ha un errore che vie stampato a schermo
-			if(segment.isEmpty()) {
-				new NotFoundSegmentPointError();
-			}
-			
-			// prendo gli estremi del segmento
-			SegmentPoint begin = new SegmentPoint();
-			begin = StandardUserSession.getInstance().getFirstSegmentPoint(segment);
-			SegmentPoint end = new SegmentPoint();
-			end = getLastSegmentPoint(segment);
-			
-			// misuro le distanze tra gli estremi e il bordo e le metto in un dizionario
-			if(begin!=null && end!=null) {	
-				double firstMinDinstance = getMinDinstanceSegmentToBorder(begin,satelliteName);
-				double secondMinDistance = getMinDinstanceSegmentToBorder(end,satelliteName);
-				distances.put("firstMinDinstance", firstMinDinstance);
-				distances.put("secondMinDistance", secondMinDistance);
-				return distances;
-				}
-			return null;
-		}
+		
 		
 		// La funzione restituisce i filamenti in un quadrato
 		private ArrayList<FilamentBean> findFilamentBySquare(double centreX, double centreY, double side) throws ConfigurationError, DataAccessError {
 			
 			// definisco i quattro vertici del quadrato partendo dalle coordinate del centroide e dalla lunghezza del lato
 			double halfSide = side/2.0;
-			double x0 = centreX - halfSide;
-			double x1 = centreX + halfSide;
-			double y0 = centreY - halfSide;
-			double y1 = centreY + halfSide;
+			double left = centreX - halfSide;
+			double right = centreX + halfSide;
+			double down = centreY - halfSide;
+			double up = centreY + halfSide;
 			ArrayList<FilamentBean> filamentBeans = new ArrayList<>();
-			ArrayList<BorderPointFilament> filamentsWithBorderPoints = new ArrayList<>();
+			ArrayList<String> filamentNamesInTheSquare = new ArrayList<>();
 			ArrayList<Filament> filaments = new ArrayList<>();
 			
 			FilamentsRepositoryFactory filamentsRepositoryFactory = FilamentsRepositoryFactory.getInstance();
 			FilamentsRepository filamentsRepository = filamentsRepositoryFactory.createFilamentsRepository();
 			
 			// cerco i BorderPointFilament nel quadrato
-			filamentsWithBorderPoints = filamentsRepository.findFilamentsWithBorderPointsInSquare(x0, x1, y0, y1);
+			filamentNamesInTheSquare = filamentsRepository.findFilamentsWithBorderPointsInSquare(left, right, down, up);
 			
 			// dato ogni BorderPointFilament ricavo un Filament
-			for(BorderPointFilament borderPointFilament : filamentsWithBorderPoints) {
+			for(String filamentName : filamentNamesInTheSquare) {
 				Filament filament = new Filament();
-				filament = filamentsRepository.findFilamentByBorderPoints(borderPointFilament);
+				filament = filamentsRepository.findFilamentByName(filamentName);
 				filaments.add(filament);
 			}
 			
@@ -394,44 +372,22 @@ public class StandardUserSession {
 		// La funzione restituisce i filamenti in un cerchio
 		private ArrayList<FilamentBean> findFilamentByCircle(double centreX, double centreY, double radius) throws ConfigurationError, DataAccessError {
 			
-			// definisco i quattro vertici del quadrato partendo dalle coordinate del centroide e dalla lunghezza del raggio
-			double x0 = centreX - radius;
-			double x1 = centreX + radius;
-			double y0 = centreY - radius;
-			double y1 = centreY + radius;
 			ArrayList<FilamentBean> filamentBeans = new ArrayList<>();
-			ArrayList<BorderPointFilament> filamentsWithBorderPoints = new ArrayList<>();
-			ArrayList<String> filamentsWithBorderPointsToDelete = new ArrayList<>();
+			ArrayList<String> filamentNames = new ArrayList<>();
 			ArrayList<Filament> filaments = new ArrayList<>();
 			double powRadius = Math.pow(radius, 2);
-			boolean isNotInCircle;
 			
 			FilamentsRepositoryFactory filamentsRepositoryFactory = FilamentsRepositoryFactory.getInstance();
 			FilamentsRepository filamentsRepository = filamentsRepositoryFactory.createFilamentsRepository();
 			
-			// cerco i BorderPointFilament nel quadrato
-			filamentsWithBorderPoints = filamentsRepository.findFilamentsWithBorderPointsInSquare(x0, x1, y0, y1);
+			// cerco i BorderPointFilament nel cerchio
+			filamentNames = filamentsRepository.findFilamentsWithBorderPointsInCircle(centreX, centreY, powRadius);					
 			
-			// controllo quali BorderPointFilament non sono nel cerchio ma solo nel quadrato e escludo i filamenti parzialmente presenti
-			for(BorderPointFilament borderPointFilament : filamentsWithBorderPoints) {
-				double xDistance = borderPointFilament.getPointLatitude() - centreX;
-				double yDistance = borderPointFilament.getPointLongitude() - centreY;
-				double powXDistance = Math.pow(xDistance,2);
-				double powYDistance = Math.pow(yDistance,2);
-				double distance = powYDistance + powXDistance;
-				isNotInCircle = distance > powRadius;
-				if(isNotInCircle) {
-					filamentsWithBorderPointsToDelete.add(borderPointFilament.getFilamentName());
-				}
-			}
-			
-			// cerco i filamenti che sono nel cerchio
-			for(BorderPointFilament borderPointFilament : filamentsWithBorderPoints) {
-				if(!filamentsWithBorderPointsToDelete.contains(borderPointFilament.getFilamentName())) {
-					Filament filament = new Filament();
-					filament = filamentsRepository.findFilamentByBorderPoints(borderPointFilament);
-					filaments.add(filament);
-				}
+			// cerco i Filament che sono nel cerchio
+			for(String filamentName : filamentNames) {
+				Filament filament = new Filament();
+				filament = filamentsRepository.findFilamentByName(filamentName);
+				filaments.add(filament);
 			}
 			
 			for(Filament filament : filaments) {
@@ -441,6 +397,8 @@ public class StandardUserSession {
 			
 			return filamentBeans;
 		}
+		
+		
 
 		// La funzione restituisce un ArrayList composta di SegmentPoint come segmento 
 		private ArrayList<SegmentPoint> findSegmentBySatelliteNameAndId(String filamentName, int idSegment) throws ConfigurationError, DataAccessError {
@@ -517,5 +475,103 @@ public class StandardUserSession {
 			}
 			return lastSegmentPoint;
 		}
+		
+		public ArrayList<StarBeanWithMinDistance> calculateSFDistance(String filamentName) throws ConfigurationError, DataAccessError, NotFoundFilamentError, NotFoundBackBoneError, FilamentWithoutStarsError {
+			ArrayList<StarBeanWithMinDistance> starFilamentDistances = new ArrayList<>();
+			
+			FilamentsRepositoryFactory filamentsRepositoryFactory = FilamentsRepositoryFactory.getInstance();
+			FilamentsRepository filamentsRepository = filamentsRepositoryFactory.createFilamentsRepository();
+			
+			// prendo il filamento con il nome inserito
+			Filament filament = filamentsRepository.findFilamentByName(filamentName);
+			// se il filamento non esiste lo comunico all'utente e interrompo l'esecuzione
+			if(filament==null) {
+				throw new NotFoundFilamentError();
+			}
+			// cerco le stelle nel filamento
+			ArrayList<StarBean> starsBeanInTheFilament = searchStarsIntoFilament(filamentName);
+			if(!starsBeanInTheFilament.isEmpty()) { // continuo solo se il filamento contiene stelle altrimenti ho finito
+				
+				// cerco i punti che costituiscono la spina dorsale
+				ArrayList<SegmentPoint> backBone = new ArrayList<>();
+				backBone = filamentsRepository.getBackBone(filament);
+				if(!backBone.isEmpty()) { // continuo se ho punti della spina dorsale ..
+					for(StarBean starBean : starsBeanInTheFilament) {
+						/** calcolo la distanza minima dalla stella alla spina dorsale per ogni elemento e incapsulo i dati 
+						 * in un oggetto StarBeanWithMinDistance, contenente i dati di uno StarBean più la distanza minima 
+						 * dallo scheletro  */
+						double minDistanceStarFilament = findMinDistanceFromStarToBackBone(starBean,backBone);
+						StarBeanWithMinDistance starBeanWithMinDistance = new StarBeanWithMinDistance(starBean,minDistanceStarFilament);
+						starFilamentDistances.add(starBeanWithMinDistance);
+					}
+				} else {//..altrimenti interrompo l'esecuzione e avviso l'utente
+					throw new NotFoundBackBoneError();
+				}
+			} else {
+				throw new FilamentWithoutStarsError();
+			}
+			
+			return starFilamentDistances;
+		}
+
+		private double findMinDistanceFromStarToBackBone(StarBean starBean, ArrayList<SegmentPoint> backBone) throws NotFoundBackBoneError {
+
+			double minDistanceFromStarToBackBone,actualDistance,x0,x1,y0,y1;
+			minDistanceFromStarToBackBone = -1;
+			x0 = starBean.getLongitude();
+			y0 = starBean.getLatitude();
+			int i = 0;
+			for(SegmentPoint backBonePoint : backBone) {
+				x1 = backBonePoint.getLongitude();
+				y1 = backBonePoint.getLatitude();
+				if(i==0) { // all'inizio prendo la prima distanza come migliore
+					minDistanceFromStarToBackBone = getDistance(y1, y0, x1, x0);
+					i++;
+				}
+				actualDistance = getDistance(y1, y0, x1, x0);
+				if(actualDistance < minDistanceFromStarToBackBone) { // prendo la distanza minore tra l'attuale e la precedente
+					minDistanceFromStarToBackBone = actualDistance;
+				}
+				
+			}
+			if(minDistanceFromStarToBackBone==-1) { // in caso di scheletro assente ho un errore
+				throw new NotFoundBackBoneError();
+			}
+			return minDistanceFromStarToBackBone;
+		}
+
+		private double getDistance(double y1, double y0, double x1, double x0) {
+			double powDistance = Math.pow((y1-y0), 2) + Math.pow((x1-x0), 2);
+			double distance = Math.pow(powDistance, 0.5);
+			return distance;
+		}
+		
+		// La funzione restituisce la distanza minima tra gli estremi del segmento e i punti del contorno
+				public HashMap<String,Double> calculateMinDistanceFromSegmentToBorder(String filamentName, int idSegment, String satelliteName) throws NotFoundSegmentPointError, ConfigurationError, DataAccessError, NotFoundBorderError {
+					HashMap<String,Double> distances = new HashMap<>();
+					ArrayList<SegmentPoint> segment = new ArrayList<>();
+					segment = findSegmentBySatelliteNameAndId(filamentName,idSegment);
+					
+					// Se il filamento non ha punti del segmento si ha un errore che vie stampato a schermo
+					if(segment.isEmpty()) {
+						new NotFoundSegmentPointError();
+					}
+					
+					// prendo gli estremi del segmento
+					SegmentPoint begin = new SegmentPoint();
+					begin = getFirstSegmentPoint(segment);
+					SegmentPoint end = new SegmentPoint();
+					end = getLastSegmentPoint(segment);
+					
+					// misuro le distanze tra gli estremi e il bordo e le metto in un dizionario
+					if(begin!=null && end!=null) {
+						double firstMinDinstance = getMinDinstanceSegmentToBorder(begin,satelliteName);
+						double secondMinDistance = getMinDinstanceSegmentToBorder(end,satelliteName);
+						distances.put("firstMinDinstance", firstMinDinstance);
+						distances.put("secondMinDistance", secondMinDistance);
+						return distances;
+						}
+					return null;
+				}
 	    
 }

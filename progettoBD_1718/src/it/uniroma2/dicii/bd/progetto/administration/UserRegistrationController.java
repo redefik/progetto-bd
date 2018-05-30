@@ -21,7 +21,6 @@ public class UserRegistrationController {
 	private static final String NOT_AVAILABLE_USERNAME = "Username gia' in uso.";
 	private static final String NOT_CONFIRMED_PASSWORD = "Le password inserite non coincidono.";
 	private static final String REGISTRATION_CONFIRMED = "La registrazione e' stata effettuata con successo.";
-	private static final String ADMINISTRATION_MENU = "../gui/administrationView.fxml";
 	
 	@FXML
 	private AnchorPane window;
@@ -82,11 +81,7 @@ public class UserRegistrationController {
 			AdministrationSession.getInstance().registerUser(userBean);
 			
 			WindowManager.getInstance().openInfoWindow(REGISTRATION_CONFIRMED);
-			WindowManager.getInstance().changeMenu(ADMINISTRATION_MENU);
-			
-		} catch(GUIError e) {
-			Logger.getLogger(getClass()).error(e.getMessage(), e);
-			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+			gotoPreviousMenu();
 		} catch(ConfigurationError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);

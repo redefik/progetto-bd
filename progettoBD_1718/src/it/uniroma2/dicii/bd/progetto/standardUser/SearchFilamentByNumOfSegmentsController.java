@@ -85,7 +85,8 @@ public class SearchFilamentByNumOfSegmentsController {
 				WindowManager.getInstance().openWindow(RESEARCH_RESULT_MENU);
 			} catch (GUIError e) {
 				Logger.getLogger(getClass()).error(e.getMessage(), e);
-				WindowManager.getInstance().openErrorWindow(ErrorType.GUI);	
+				WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+				gotoPreviousMenu();
 			}
 		}	
 	}

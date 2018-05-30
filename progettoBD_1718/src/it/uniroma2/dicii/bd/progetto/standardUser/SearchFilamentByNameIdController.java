@@ -109,7 +109,8 @@ public class SearchFilamentByNameIdController {
 					WindowManager.getInstance().openWindow(FILAMENT_INFO_MENU);
 				} catch (GUIError e) {
 					Logger.getLogger(getClass()).error(e.getMessage(), e);
-					WindowManager.getInstance().openErrorWindow(ErrorType.GUI);	
+					WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+					gotoPreviousMenu();
 				}
 			}
 			

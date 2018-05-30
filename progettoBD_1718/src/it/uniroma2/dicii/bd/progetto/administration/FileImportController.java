@@ -27,6 +27,7 @@ public class FileImportController {
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+			gotoPreviousMenu();
 		}
 	}
 
@@ -45,6 +46,7 @@ public class FileImportController {
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+			gotoPreviousMenu();
 		}
 	}
 	
@@ -54,6 +56,7 @@ public class FileImportController {
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+			gotoPreviousMenu();
 		}
 	}
 
@@ -63,6 +66,7 @@ public class FileImportController {
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+			gotoPreviousMenu();
 		}
 	}
 

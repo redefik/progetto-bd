@@ -35,7 +35,6 @@ public class SatelliteRegistrationController {
 	private static final String NOT_INSERTED_AGENCY = "Specificare almeno un'agenzia.";
 	private static final String INVALID_NAME_MESSAGE = "Il satellite specificato è già presente.";
 	private static final String INSERT_CONFIRMED = "Inserimento del satellite effettuato con successo.";
-	private static final String ADMINISTRATION_MENU = "../gui/administrationView.fxml";
 	
 	@FXML
 	private AnchorPane window;
@@ -134,10 +133,10 @@ public class SatelliteRegistrationController {
 			}
 			
 			// Si crea una lista con tutte le agezie che hanno partecipato alla missione relativa al satellite
-			ArrayList<SelectableAgencyBean> selectedAgencies = new ArrayList<SelectableAgencyBean>();
+			ArrayList<AgencyBean> selectedAgencies = new ArrayList<AgencyBean>();
 			for (SelectableAgencyBean elem : agencyBeans) {
 				if (elem.getCheckBox().isSelected()) {
-					selectedAgencies.add(elem);
+					selectedAgencies.add(new AgencyBean(elem.getName()));
 				}
 			}
 			
@@ -151,8 +150,7 @@ public class SatelliteRegistrationController {
 	        AdministrationSession.getInstance().registerSatellite(satelliteBean, selectedAgencies);
 	        
 	        WindowManager.getInstance().openInfoWindow(INSERT_CONFIRMED);
-			WindowManager.getInstance().changeMenu(ADMINISTRATION_MENU);
-	        
+	        gotoPreviousMenu();
 	        
 		} catch (ParseException e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
@@ -177,11 +175,7 @@ public class SatelliteRegistrationController {
 				Logger.getLogger(getClass()).error(e1.getMessage(), e1);
 				WindowManager.getInstance().openErrorWindow(ErrorType.CONFIGURATION);
 			}
-			
-		} catch(GUIError e) {
-			Logger.getLogger(getClass()).error(e.getMessage(), e);
-			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
-		}
+		} 
 	}
 	
 	public void gotoPreviousMenu() {

@@ -10,6 +10,17 @@ public class Star {
 	private String classification; 
 	private String satellite;
 	
+	public Star(String name, int id, double latitude, double longitude, double flow, String classification, String satellite) {
+
+		this.name = name;
+		this.id = id;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.flow = flow;
+		this.classification = classification;
+		this.satellite = satellite;
+	}
+	
 	public Star(StarBean starBean) {
 
 		this.name = starBean.getName();

@@ -5,7 +5,9 @@ package it.uniroma2.dicii.bd.progetto.errorLogic;
 
 public class DataAccessError extends Exception {
 	
+	private static final long serialVersionUID = 1L;
 	public static final String INSERT_FAILED = "Inserimento non effettuato";
+	public static final String DELETE_FAILED = "Cancellazione non effettuata";
 	
 	public DataAccessError (String message, Throwable cause) {
 		super(message, cause);

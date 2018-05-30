@@ -44,8 +44,7 @@ public interface FilamentsRepository {
 
 	ArrayList<Filament> findFilamentByNumOfSegments(int minNum, int maxNum) throws ConfigurationError, DataAccessError;
 
-	ArrayList<BorderPointFilament> findFilamentsWithBorderPointsInSquare(double x0, double x1, double y0,
-			double y1) throws ConfigurationError, DataAccessError;
+	ArrayList<String> findFilamentsWithBorderPointsInSquare(double left, double right, double down, double up) throws ConfigurationError, DataAccessError;
 
 	ArrayList<SegmentPoint> findSegmentBySatelliteNameAndId(String filamentName, int idSegment) throws DataAccessError, ConfigurationError;
 
@@ -54,5 +53,16 @@ public interface FilamentsRepository {
 
 	Filament findFilamentByBorderPoints(BorderPointFilament filamentWithBorderPoints) throws DataAccessError, ConfigurationError;
 
+	void deleteFilamentWithName(String name) throws ConfigurationError, DataAccessError;
 
-}
+	void deleteBorderPoints(ArrayList<BorderPoint> borderPoints) throws ConfigurationError, DataAccessError;
+
+	void deleteSegmentPoints(ArrayList<SegmentPoint> segmentPoints) throws ConfigurationError, DataAccessError;
+
+	ArrayList<SegmentPoint> getBackBone(Filament filament) throws DataAccessError, ConfigurationError;
+
+	ArrayList<SegmentPoint> findAllSegmentPoints() throws ConfigurationError, DataAccessError;
+
+	ArrayList<String> findFilamentsWithBorderPointsInCircle(double centreX, double centreY, double powRadius)
+			throws DataAccessError, ConfigurationError;
+}	

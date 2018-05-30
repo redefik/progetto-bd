@@ -52,6 +52,7 @@ public class SearchFilamentByRegionController {
 	private double lenght;
 	private static final String TASK_IS_RUNNING = "Attendere il completamento dell'operazione";
 	private static final String GO_TO_TABLE_VIEW = "../gui/tableFilamentsView.fxml";
+	private static final String NOT_VALID_INPUT= "Inserire dati validi nei campi";
 
 	@FXML
 	public void initialize(){
@@ -103,7 +104,7 @@ public class SearchFilamentByRegionController {
 					WindowManager.getInstance().openErrorWindow(ErrorType.DATA_ACCESS);
 				} else if (exception instanceof NumberFormatException) {
 					Logger.getLogger(getClass()).error(exception.getMessage(), exception);
-					errorMessage.setText("Inserire dati validi nei campi");
+					errorMessage.setText(NOT_VALID_INPUT);
 				}
 			}		
 		}
@@ -116,7 +117,6 @@ public class SearchFilamentByRegionController {
 			isTaskRunning = true;
 			updateProgress(-1, 1);
 			
-			//Si instanzia mediante l'uso di una factory un parser per il file da importare
 			galacticLatitude = Double.parseDouble(latitude.getText());
 			galacticLongitude = Double.parseDouble(longitude.getText());
 			lenght = Double.parseDouble(size.getText());
@@ -141,6 +141,7 @@ public class SearchFilamentByRegionController {
 		} catch (GUIError e) {
 			Logger.getLogger(getClass()).error(e.getMessage(), e);
 			WindowManager.getInstance().openErrorWindow(ErrorType.GUI);
+			gotoPreviousMenu();
 		}	
 	}
 
